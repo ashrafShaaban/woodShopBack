@@ -1,0 +1,132 @@
+.ourg{
+font-size:50px;
+font-weight:bold;
+margin:30px 0;
+text-align:center;
+}
+.gallery{
+  padding:15px;
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+ gap:10px;
+ background-color:white;
+
+
+}
+.gallery .img-box{
+width:300px;
+height:300px;
+text-align:center;
+border:1px solid #ddd;
+cursor:pointer;
+}
+.gallery .img-box img{
+ width:200px;
+ height:200px;
+ padding:10px
+}
+.gallery .img-box h4{
+ font-size:22px;
+ font-weight:bold;
+
+}
+.side-bar{
+    position: fixed;
+    width: 250px;
+    background-color: #433305;
+    height: 100vh;
+    color: white;
+    top:0;
+    left:0;
+
+}
+.side-bar ul{
+    position: absolute;
+    top: 20%;
+    list-style: none;
+}
+.side-bar ul li{
+margin-bottom:20px;
+}
+.side-bar ul li a{
+text-decoration:none;
+color:white;
+font-size:30px;
+font-weight:bold;
+margin-left:10px;
+}
+section.dash{
+ margin-left:300px;
+}
+section.dash h1{
+ margin:50px 0;
+ text-align:center
+}
+.calculate{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    gap: 20px;
+}
+.calculate .size{
+border: 1px solid;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #eee;
+
+    width: 400px;
+}
+.calculate .size h3{
+}
+.calculate .size span{
+}
+.headform{
+     margin: 30px 0;
+}
+.itemform{
+   display: flex ;
+       flex-direction: column;
+       justify-content: center;
+       width: 500px;
+       height: 300px;
+       border: 1px solid #eee;
+       padding: 15px;
+       margin: 0 auto;
+}
+.itemform input{
+    width: 400px;
+    margin-bottom: 20px;
+}
+.itemform input.btn{
+ margin:0 175px;
+}
+.add{
+ background-color:green;
+ margin:10px;
+ font-size:20px;
+ text-decoration:none;
+     color: white;
+     padding: 6px 10px;
+     border-radius: 5px;
+}
+.btns{
+ display:flex;
+ flex-wrap:wrap;
+ gap:5px;
+     justify-content: center;
+     align-items: center;
+
+}
+.backto{
+background-color:green;
+margin:10px;
+font-size:20px;
+text-decoration:none;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 5px;
+}
+.imgInAG{
+cursor:pointer;
+}

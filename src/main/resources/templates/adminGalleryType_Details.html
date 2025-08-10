@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>G</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+<h1 class="ourg">Our Gallery</h1>
+<a th:href="@{/additeminGType/{typeId}(typeId=${TypeId})}" class="add">add Gallery</a>
+<div class="gallery">
+    <div th:each="galarie : ${galaries}" class="img-box" data-gallery-id="${item.id}">
+        <img th:src="${galarie.imageURL}" alt="book cover"/>
+        <h4 th:text="${galarie.name}"></h4>
+        <div class="btns">
+            <form method="post" th:action="@{/updateGallery(itemId=${galarie.id})}">
+                <input type="hidden" th:value="${galarie.id}">
+                <button type="submit" class="btn btn-info btn-sm">edit</button>
+            </form>
+            <form method="post" th:action="@{/deleteGallery(itemId=${galarie.id})}">
+                <input type="hidden" th:value="${galarie.id}">
+                <button type="submit" class="btn btn-danger btn-sm">delete</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

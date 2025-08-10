@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>adminDashboard</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+<div class="side-bar">
+    <ul>
+        <li> <i class="fa-solid fa-file"></i> <a th:href="@{/seeGallery}">see Gallery</a></li>
+        <li> <i class="fa-solid fa-message"></i><a th:href="@{/seemessages}">See message</a></li>
+        <li> <i class="fa-solid fa-message"></i><a th:href="@{/videos/add}">add video</a></li>
+    </ul>
+</div>
+<section class="dash">
+    <h1>Admin Dashboard</h1>
+    <div class="calculate">
+        <div class="size">
+            <h3>Items in Gallery</h3>
+            <p>Total: <span th:text="${galleryLength} +  Item"></span></p>
+        </div>
+        <div class="size">
+            <h3>Messages you Recevied</h3>
+            <p>Total: <span th:text="${contactLength} +   Message"></span></p>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
