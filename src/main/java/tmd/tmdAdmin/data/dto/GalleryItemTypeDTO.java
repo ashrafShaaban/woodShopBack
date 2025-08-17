@@ -1,10 +1,17 @@
 package tmd.tmdAdmin.data.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 public class GalleryItemTypeDTO {
     private  int id;
+    @NotNull(message = "Required field")
     private String name;
+
+    @NotNull(message = "Required field")
     private String name_ar;
+    @NotNull(message = "Required field")
     private String name_ru;
+
     private String path;
 
     public GalleryItemTypeDTO() {

@@ -11,20 +11,16 @@ public class Videos {
     @Column(name = "id")
     private int id;
 
-    @Column(name="title")
-    private String title;
 
-    @Column(name="video_url")
+
+    @Column(name="videoURL")
     private String videoUrl;
 
+    @ManyToOne
+    @JoinColumn(name="typeId")
+    private VideosType type;
+
     public Videos() {
-    }
-
-    @Autowired
-    public Videos(String title, String videoUrl) {
-
-        this.title = title;
-        this.videoUrl = videoUrl;
     }
 
     public int getId() {
@@ -35,19 +31,19 @@ public class Videos {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getVideoUrl() {
         return videoUrl;
     }
 
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
+    }
+
+    public VideosType getType() {
+        return type;
+    }
+
+    public void setType(VideosType type) {
+        this.type = type;
     }
 }

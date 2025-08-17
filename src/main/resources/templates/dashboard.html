@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://thymeleaf.org/extra/springsecuirty">
 <head>
     <meta charset="UTF-8">
     <title>adminDashboard</title>
@@ -8,27 +9,70 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
-<body>
-<div class="side-bar">
-    <ul>
-        <li> <i class="fa-solid fa-file"></i> <a th:href="@{/seeGallery}">see Gallery</a></li>
-        <li> <i class="fa-solid fa-message"></i><a th:href="@{/seemessages}">See message</a></li>
-        <li> <i class="fa-solid fa-message"></i><a th:href="@{/videos/add}">add video</a></li>
-    </ul>
-</div>
-<section class="dash">
-    <h1>Admin Dashboard</h1>
-    <div class="calculate">
-        <div class="size">
-            <h3>Items in Gallery</h3>
-            <p>Total: <span th:text="${galleryLength} +  Item"></span></p>
-        </div>
-        <div class="size">
-            <h3>Messages you Recevied</h3>
-            <p>Total: <span th:text="${contactLength} +   Message"></span></p>
+<body style="background-color: #eee;">
+<!--<header class="header">-->
+
+<!--    <div class="userInfo">-->
+<!--        <i class="fa-solid fa-user"></i> <span th:text="${username}"></span>-->
+<!--    </div>-->
+<!--    <div class="logout " >-->
+<!--        <form action="#" th:action="@{/logout}" method="post">-->
+<!--            <input class="btn btn-sm btn-danger " type="submit" value="logout" name="logout" />-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</header>-->
+
+<!--<div class="side-bar">-->
+<!--    <div class="img">-->
+<!--        <img th:src="@{/imgs/logo.png}" />-->
+<!--    </div>-->
+<!--    <h3>Dashboard</h3>-->
+<!--    <nav class="bar">-->
+<!--        <a th:href="@{/seeGallery}" ><i class="fa-solid fa-file "></i><span>Galaries</span></a>-->
+<!--        <a th:href="@{/seemessages}" ><i class="fa-solid fa-message"></i><span>Messages</span></a>-->
+<!--        <a th:href="@{/seeVideos}" ><i class="fa-solid fa-video"></i><span>Videos</span></a>-->
+<!--        <a th:href="@{/seeUsers}"  ><i class="fa-solid fa-users"></i><span>Users</span></a>-->
+
+<!--    </nav>-->
+<!--</div>-->
+<th:block th:replace="~{fragments/header}"></th:block>
+<section class="flex">
+
+    <div class="size">
+        <i class="fa-solid fa-file "></i>
+        <div>
+            <h3 th:text="${galleryLength}"></h3>
+            <p>Total Galaries</p>
         </div>
     </div>
-</section>
+    <div class="size">
+        <i class="fa-solid fa-message "></i>
+        <div>
+            <h3 th:text="${contactLength}"></h3>
+            <p>Total messages</p>
+        </div>
+    </div>
+    <div class="size">
+        <i class="fa-solid fa-video "></i>
+        <div>
+            <h3 th:text="${videosLength}"></h3>
+            <p>Total videos</p>
+        </div>
+    </div>
+    <div class="size">
+        <i class="fa-solid fa-users "></i>
+        <div>
+            <h3 th:text="${users}"></h3>
+            <p>Total users</p>
+        </div>
+    </div>
 
+</section>
+<section class="mt-4 p-3">
+    <h2>Dashboard Overview</h2>
+    <canvas id="dashboardChart" height="100"></canvas>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:src="@{/js/canvas.js}" ></script>
 </body>
 </html>

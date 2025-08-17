@@ -17,8 +17,8 @@ public class Gallery {
     @Column(name="imageURL")
     private String imageURL;
 
-
-    @Column(name="name")
+   @NotNull(message = "Required Failed")
+    @Column(name="name",unique = true,nullable = false)
     private String name;
 
     @ManyToOne

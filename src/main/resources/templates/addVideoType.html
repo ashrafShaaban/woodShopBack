@@ -8,17 +8,33 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
-<body>
+<body style="padding-left:0;">
 
 
 <h1 class="text-center headform">Add item Form</h1>
 <form class="itemform" method="post" th:object="${video}" th:action="@{/saveVideo}" enctype="multipart/form-data" >
-    <label>Title:</label>
-    <input type="text" th:field="*{title}" name="title" required />
-    <label>Video URL:</label>
-    <input type="text" th:field="*{videoUrl}" name="videoURL" required>
+    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+    <span th:if="${#fields.hasErrors('name')}"
+          th:errors="*{name}"
+          class="notvalid"/>
+
+    <input type="text" th:field="*{name}"  placeholder="name in english" />
+    <span th:if="${#fields.hasErrors('name_ar')}"
+          th:errors="*{name_ar}"
+          class="notvalid"/>
+    <input type="text" th:field="*{name_ar}"  placeholder="name in arabic" />
+
+    <span th:if="${#fields.hasErrors('name_ru')}"
+          th:errors="*{name_ru}"
+          class="notvalid"/>
+    <input type="text" th:field="*{name_ru}"  placeholder="name in russian" />
+
+
+    <label>Select video :</label>
+    <input type="file" name="videoFile" required accept="video/*">
     <input class="btn btn-info w-25" type="submit" value="add video">
 </form>
+<a th:href="@{/seeVideos}" class="backto" >Go back Videos</a>
 <script th:src="@{/js/admin.js}" ></script>
 </body>
 </html>

@@ -14,7 +14,7 @@ public class User {
     @Column(name="id")
     private int id;
 
-    @Column(name = "username")
+    @Column(name = "username",unique = true,nullable = false)
     private String username;
 
     @Column(name = "password")
@@ -66,5 +66,15 @@ public class User {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }

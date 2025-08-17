@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<header class="header">
+    <section class="flex">
+    <a class="aaa">TMD</a>
+   <div class="icons">
+       <div class="menu-btn">
+           <i class="fa-solid fa-bars"></i>
+       </div>
+    <div class="userInfo">
+        <i class="fa-solid fa-user"></i>
+    </div>
+
+    <div class="logout " >
+        <span th:text="${username}"></span>
+        <form action="#" th:action="@{/logout}" method="post">
+            <input class="btn btn-sm btn-danger " type="submit" value="logout" name="logout" />
+        </form>
+    </div>
+   </div>
+    </section>
+</header>
+<div class="side-bar">
+    <div class="closebtn">
+        <i class="fas fa-times"></i>
+    </div>
+    <div class="img">
+        <img th:src="@{/imgs/logo.png}" />
+    </div>
+    <a th:href="@{/dashboard} " class="dashhead">Dashboard</a>
+    <nav class="bar">
+        <a th:href="@{/seeGallery}" ><i class="fa-solid fa-file "></i><span>Galaries</span></a>
+        <a th:href="@{/seemessages}" ><i class="fa-solid fa-message"></i><span>Messages</span></a>
+        <a th:href="@{/seeVideos}" ><i class="fa-solid fa-video"></i><span>Videos</span></a>
+        <a th:href="@{/seeUsers}"  ><i class="fa-solid fa-users"></i><span>Users</span></a>
+
+    </nav>
+</div>
+</html>

@@ -9,21 +9,16 @@
 
 </head>
 <body style="padding-left:0;">
-<h1 class="text-center headform">Update item Form</h1>
-<form class="itemform" th:object="${updateGallery}" method="post" enctype="multipart/form-data" th:action="@{/saveGalleryAfterUpdate}">
-    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+<h1 class="text-center headform">Update Video</h1>
+<form class="itemform" th:object="${video}" method="post" enctype="multipart/form-data" th:action="@{saveVideoAfterUpdate}">
     <input type="hidden" th:field="*{id}" />
-    <span th:if="${#fields.hasErrors('name')}"
-          th:errors="*{name}"
-          class="notvalid"/>
-    <input class="cell" type="text" th:field="*{name}">
 
-     <input type="hidden" th:field="*{type.id}" />
-
-    <input type="hidden" name="oldimageURL" th:value="${updateGallery.imageURL}">
-    <input class="cell" type="file" name="newimageURL" accept="image/*"/>
+    <input type="hidden" th:field="*{type.id}" />
+<!--    <input type="hidden" name="typeId" th:value="${videoType.id}" />-->
+    <input type="hidden" name="oldvideoURl" th:value="*{videoUrl}">
+    <input class="cell" type="file" name="newvideoURL" accept="video/*"/>
     <input class="btn btn-info w-25" type="submit" value="update">
 </form>
-<a th:href="@{/seeGallery}" class="backto" >Go back to Gallery</a>
+<a th:href="@{/seeVideos}" class="backto" >Go back to Gallery</a>
 </body>
 </html>

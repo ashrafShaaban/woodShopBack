@@ -35,12 +35,15 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.authorizeHttpRequests(configurer ->
-                configurer  .requestMatchers("/dashboard").hasRole("ADMIN")
+                configurer  .requestMatchers("/dashboard").hasAnyRole("ADMIN","SUPERADMIN")
                         .anyRequest().authenticated())
                 .formLogin( form -> form
                         .loginPage("/loginForm")
                         .loginProcessingUrl("/authenticateTheUser")
-                        .permitAll());
+                        .permitAll()
+                        )
+                .logout(logout -> logout.permitAll()
+                      );
         http.csrf(csrf -> csrf.disable());
         return http.build();
     }
@@ -49,5 +52,7 @@ public class WebConfig implements WebMvcConfigurer {
     public  void addResourceHandlers(ResourceHandlerRegistry registry){
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:///C:/wood-images/");
+        registry.addResourceHandler("/videos/**")
+                .addResourceLocations("file:///C:/videos/");
     }
 }

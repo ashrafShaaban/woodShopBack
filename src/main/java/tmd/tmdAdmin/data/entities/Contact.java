@@ -3,6 +3,8 @@ package tmd.tmdAdmin.data.entities;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "contact")
@@ -23,6 +25,9 @@ public class Contact {
 
     @Column(name="message")
     private String message;
+
+    @Column(name="month")
+    private LocalDateTime date;
 
     public Contact() {
     }
@@ -67,6 +72,11 @@ public class Contact {
         this.id = id;
     }
 
+    public LocalDateTime getDate() {
+        return date;
+    }
 
-
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
 }

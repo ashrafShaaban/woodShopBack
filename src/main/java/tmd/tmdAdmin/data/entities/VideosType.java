@@ -1,18 +1,21 @@
 package tmd.tmdAdmin.data.entities;
 
 import jakarta.persistence.*;
+
 import jakarta.validation.constraints.NotNull;
+import org.springframework.stereotype.Controller;
 
 @Entity
-@Table(name="gallery_type")
-public class Gallery_Type {
+@Table(name = "videostype")
+public class VideosType {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id",unique = true,nullable = false)
     private  int id;
 
     @NotNull(message = "required field")
-    @Column(name = "name",unique = true,nullable = false)
+    @Column(name="name")
     private String name;
 
     @NotNull(message = "required field")
@@ -23,23 +26,10 @@ public class Gallery_Type {
     @Column(name="name_ru")
     private String name_ru;
 
-    @Column(name="path")
-    private String path;
+    @Column(name = "videoURL")
+    private String videoURL;
 
-//    @OneToMany(mappedBy = "galleryType")
-//    @JsonManagedReference
-//    private List<Gallery> galleries;
-
-
-
-    public Gallery_Type() {
-    }
-
-    public Gallery_Type(String name, String name_ar, String name_ru, String path) {
-        this.name = name;
-        this.name_ar = name_ar;
-        this.name_ru = name_ru;
-        this.path = path;
+    public VideosType() {
     }
 
     public int getId() {
@@ -74,22 +64,11 @@ public class Gallery_Type {
         this.name_ru = name_ru;
     }
 
-    public String getPath() {
-        return path;
+    public String getVideoURL() {
+        return videoURL;
     }
 
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    @Override
-    public String toString() {
-        return "Gallery_Type{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", name_ar='" + name_ar + '\'' +
-                ", name_ru='" + name_ru + '\'' +
-                ", path='" + path + '\'' +
-                '}';
+    public void setVideoURL(String videoURL) {
+        this.videoURL = videoURL;
     }
 }

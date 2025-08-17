@@ -8,10 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
-<body>
+<body style="padding-left:0;">
 <h1 class="text-center headform">Add item Form</h1>
 <form class="itemform" method="post" th:object="${gallery}" th:action="@{/saveiteminGType}" enctype="multipart/form-data" >
-    <input class="cell" type="text" th:field="*{name}" name="title" placeholder="enter item name">
+    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+    <span th:if="${#fields.hasErrors('name')}"
+          th:errors="*{name}"
+          class="notvalid"/>
+    <input class="cell" type="text" th:field="*{name}"  placeholder="enter item name">
+
     <input type="hidden" name="typeId" th:value="${galleryType.id}" />
     <input type="text" th:value="${galleryType.name}" readonly />
 
