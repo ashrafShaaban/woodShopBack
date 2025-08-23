@@ -10,9 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import tmd.tmdAdmin.data.dto.VideoDTO;
-import tmd.tmdAdmin.data.entities.Gallery;
-import tmd.tmdAdmin.data.entities.Gallery_Type;
 import tmd.tmdAdmin.data.entities.Videos;
 import tmd.tmdAdmin.data.entities.VideosType;
 import tmd.tmdAdmin.data.repositories.VideoTypeRepository;
@@ -63,9 +60,9 @@ public class VideoController {
 
                 VideosType videoType= new VideosType();
                 videoType.setName(video.getName());
-                videoType.setName_ar(video.getName_ar());
-                videoType.setName_ru(video.getName_ru());
-                videoType.setVideoURL("/videos/"+filename);
+                videoType.setNameAr(video.getNameAr());
+                videoType.setNameRu(video.getNameRu());
+                videoType.setPath("/videos/"+filename);
 
                 videoTypeRepository.save(videoType);
                 return"redirect:/seeVideos";
@@ -89,8 +86,8 @@ public class VideoController {
            }
         try {
                if (!newvideoURL.isEmpty()) {
-                   if (updatedvideo.getVideoURL() != null) {
-                       String folder = "C:/videos/" + Paths.get(updatedvideo.getVideoURL());
+                   if (updatedvideo.getPath() != null) {
+                       String folder = "C:/videos/" + Paths.get(updatedvideo.getPath());
                        File oldimgFile = new File(folder);
                        if (oldimgFile.exists()) oldimgFile.delete();
                    }
@@ -99,11 +96,11 @@ public class VideoController {
                    String newImgname = UUID.randomUUID() + "_" + newvideoURL.getOriginalFilename();
                    Path newpath = Paths.get(newimgFolder, newImgname);
                    Files.write(newpath, newvideoURL.getBytes());
-                   updatedvideo.setVideoURL("/videos/" + newImgname);
+                   updatedvideo.setPath("/videos/" + newImgname);
                }
                else {
 
-                   updatedvideo.setVideoURL(oldvideoURL);
+                   updatedvideo.setPath(oldvideoURL);
                }
                videoTypeRepository.save(updatedvideo);
                return "redirect:/seeVideos";
@@ -122,7 +119,7 @@ public class VideoController {
     @GetMapping("/videoGalaryType/{id}")
     public String galleryType(@PathVariable("id") int typeid, Model model, Principal principal){
         System.out.println(typeid);
-        List<Videos> videos=videosRepository.findAllByType_Id(typeid);
+        List<Videos> videos=videosRepository.findAllByTypeId(typeid);
         model.addAttribute("videos",videos);
         model.addAttribute("TypeId",typeid);
         if(principal !=null){
@@ -152,8 +149,8 @@ public class VideoController {
         Files.write(filepath,videoURL.getBytes());
 
         Videos videoitem=new Videos();
-        videoitem.setVideoUrl("/videos/"+filename);
-        videoitem.setType(videoTypeRepository.findById(typeId).orElseThrow());
+        videoitem.setPath("/videos/"+filename);
+        videoitem.setTypeId(videoTypeRepository.findById(typeId).orElseThrow().getId());
 
 
 
@@ -176,8 +173,8 @@ public class VideoController {
         //       }
 
         if (!newURL.isEmpty()) {
-            if (video.getVideoUrl() != null) {
-                String folder = "C:/videos/" + Paths.get(video.getVideoUrl());
+            if (video.getPath() != null) {
+                String folder = "C:/videos/" + Paths.get(video.getPath());
                 File oldvideoFile = new File(folder);
                 if (oldvideoFile.exists()) oldvideoFile.delete();
             }
@@ -186,20 +183,20 @@ public class VideoController {
             String newvideoname = UUID.randomUUID() + "_" + newURL.getOriginalFilename();
             Path newpath = Paths.get(newvideoFolder, newvideoname);
             Files.write(newpath, newURL.getBytes());
-            video.setVideoUrl("/videos/" + newvideoname);
+            video.setPath("/videos/" + newvideoname);
         }
         else {
             System.out.println(oldURL);
-            video.setVideoUrl(oldURL);
+            video.setPath(oldURL);
         }
-        int typeId=video.getType().getId();
+        int typeId=video.getTypeId();
         videosRepository.save(video);
         return  "redirect:/videoGalaryType/" + typeId;
     }
     @PostMapping("/deleteVideo")
     public String deleteiteminGType(@RequestParam("itemId") int deletedone){
         Videos deletevideo=videosRepository.findById(deletedone).orElseThrow();
-        int typeId =deletevideo.getType().getId();
+        int typeId =deletevideo.getTypeId();
         videosRepository.delete(deletevideo);
         return "redirect:/videoGalaryType/" + typeId;
     }

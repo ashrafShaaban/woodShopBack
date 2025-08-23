@@ -6,5 +6,5 @@ import tmd.tmdAdmin.data.entities.Gallery;
 import java.util.List;
 
 public interface GalleryRepository extends JpaRepository<Gallery,Integer> {
-    List<Gallery> findAllByType_Id(int id);
+    List<Gallery> findAllByTypeId(int id);
 }

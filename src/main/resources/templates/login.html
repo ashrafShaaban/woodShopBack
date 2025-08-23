@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons (using webjars for local serving or CDN) -->
+    <!-- For webjars, add 'org.webjars:font-awesome:6.0.0-beta3' to pom.xml -->
+    <!-- <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.0.0-beta3/css/all.min.css}" /> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            /* Modern full-page background gradient */
+            background: linear-gradient(to right bottom, #4CAF50, #2196F3); /* Example: Green to Blue */
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh; /* Ensure it takes full viewport height */
+            display: flex; /* Use flexbox for centering */
+            align-items: center; /* Vertically center content */
+            justify-content: center; /* Horizontally center content */
+            font-family: 'Poppins', sans-serif; /* Apply Google Font */
+            padding: 20px; /* Add some padding for smaller screens */
+        }
+
+        .login-card {
+            max-width: 450px; /* Max width of the login form */
+            width: 100%; /* Make it responsive */
+            padding: 30px;
+            border-radius: 15px; /* Rounded corners for the card */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); /* Soft shadow */
+            background-color: #fff; /* White background for the card */
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* Adjust form-floating label color if needed */
+        .form-floating > label {
+            color: #6c757d; /* Muted label color */
+        }
+
+        .form-floating > .form-control:focus ~ label {
+            color: #0d6efd; /* Bootstrap primary color on focus */
+        }
+
+        .btn-primary {
+            background-color: #2196F3; /* Match primary blue */
+            border-color: #2196F3;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #1976D2; /* Darker blue on hover */
+            border-color: #1976D2;
+        }
+
+        .alert {
+            margin-bottom: 20px; /* Space between alert and form fields */
+            font-size: 0.9em;
+            display: flex; /* For icon alignment */
+            align-items: center;
+        }
+
+        /* Specific alert colors */
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+
+        .forgot-password-link {
+            font-size: 0.85em;
+            color: #6c757d; /* Muted link color */
+        }
+        .forgot-password-link:hover {
+            color: #0d6efd; /* Primary blue on hover */
+        }
+    </style>
+
+</head>
+<body>
+<div class="card login-card">
+    <div class="card-body">
+        <h2 class="login-header">Login to Your Dashboard</h2>
+        <form th:action="@{/authenticateTheUser}" method="post">
+            <!-- Error and Logout Messages -->
+            <div th:if="${param.error}" class="alert alert-danger fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>Invalid username or password.
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>You have been logged out successfully.
+            </div>
+
+            <!-- Username Input -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Username" required autofocus>
+                <label for="username"><i class="fas fa-user me-2"></i>Username</label>
+            </div>
+
+            <!-- Password Input -->
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                <label for="password"><i class="fas fa-lock me-2"></i>Password</label>
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                    <!-- IMPORTANT: The 'name="remember-me"' attribute is crucial for Spring Security -->
+                    <input class="form-check-input" type="checkbox" name="remember-me" id="rememberMe">
+                    <label class="form-check-label" for="rememberMe">
+                        Remember me
+                    </label>
+                </div>
+                <a href="#" class="text-decoration-none forgot-password-link">Forgot Password?</a>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-sign-in-alt me-2"></i>Log In
+                </button>
+            </div>
+
+            <!-- CSRF Token (If CSRF is enabled in WebConfig, uncomment this line) -->
+             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        </form>
+    </div>
+</div>
+
+<!-- Bootstrap JS (optional, for some components like tooltips/popovers) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -11,20 +11,14 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
-import tmd.tmdAdmin.data.dto.GalleryItemTypeDTO;
 import tmd.tmdAdmin.data.dto.SliderDTO;
-import tmd.tmdAdmin.data.entities.Gallery;
-import tmd.tmdAdmin.data.entities.Gallery_Type;
 import tmd.tmdAdmin.data.entities.SliderSlide;
 import tmd.tmdAdmin.data.repositories.SliderSideRepository;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.Principal;
-import java.util.List;
 import java.util.UUID;
 
 @Controller

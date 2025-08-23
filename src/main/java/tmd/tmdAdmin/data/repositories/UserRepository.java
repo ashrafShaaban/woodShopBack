@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User,Integer> {
     User findUserByUsername(String username);
-    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.rolename = 'ROLE_ADMIN'")
-    List<User> findAdminsOnly();
+//    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.rolename = 'ROLE_ADMIN'")
+//    List<User> findAdminsOnly();
 }

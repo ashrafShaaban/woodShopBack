@@ -6,6 +6,6 @@ import org.springframework.data.repository.query.Param;
 import tmd.tmdAdmin.data.entities.Contact;
 
 public interface ContactRepository extends JpaRepository<Contact,Integer> {
-    @Query("SELECT COUNT(m) FROM Contact m WHERE MONTH(m.date) = :month")
-    int countByMonth(@Param("month") int month);
+//    @Query("SELECT COUNT(m) FROM Contact m WHERE MONTH(m.date) = :month")
+//    int countByMonth(@Param("month") int month);
 }

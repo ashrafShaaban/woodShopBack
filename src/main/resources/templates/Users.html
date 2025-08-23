@@ -30,7 +30,6 @@
 
   <tr th:each="user : ${users}">
     <td th:text="${user.username}"></td>
-    <td th:text="${user.roles}"></td>
     <td sec:authorize="hasRole('SUPERADMIN')" th:text="${user.password}"></td>
     <td  sec:authorize="hasRole('SUPERADMIN')">
       <div class="btns">

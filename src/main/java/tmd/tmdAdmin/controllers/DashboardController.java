@@ -10,7 +10,6 @@ import tmd.tmdAdmin.data.repositories.*;
 import tmd.tmdAdmin.services.ContactService;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +41,7 @@ public class DashboardController {
 
     @GetMapping("/dashboard")
     public String adminD(Model model,Principal principal){
-        List<Gallery_Type> galleries=galleryTypeRepository.findAll();
+        List<GalleryType> galleries=galleryTypeRepository.findAll();
         int galleryLength=galleries.size()+galleryRepository.findAll().size();
         List<Contact> contacts=contactRepository.findAll();
         int contactLength=contacts.size();
@@ -91,7 +90,7 @@ public class DashboardController {
     }
     @GetMapping("/seeGallery")
     public String seeGallery(Model model,Principal principal){
-        List<Gallery_Type> galleries=galleryTypeRepository.findAll();
+        List<GalleryType> galleries=galleryTypeRepository.findAll();
         model.addAttribute("galleries",galleries);
         if(principal !=null){
             model.addAttribute("username",principal.getName());
@@ -122,30 +121,30 @@ public class DashboardController {
         if(principal !=null){
             model.addAttribute("username",principal.getName());
         }
-        List<User> users;
-        User currentUser = userRepository.findUserByUsername(principal.getName());
-        System.out.println(currentUser);
-        boolean isSuperAdmin = currentUser.getRoles()
-                .stream()
-                .anyMatch(role -> role.getRolename() != null &&
-                        role.getRolename().trim().equalsIgnoreCase("ROLE_SUPERADMIN"));
-
-        boolean isAdmin = currentUser.getRoles()
-                .stream()
-                .anyMatch(role -> role.getRolename() != null &&
-                        role.getRolename().trim().equalsIgnoreCase("ROLE_ADMIN"));
-
-
-        if(isSuperAdmin)
-        {
-            users=userRepository.findAll();
-        } else if (isAdmin) {
-            users=userRepository.findAdminsOnly();
-
-        }
-        else{
-            users=List.of();
-        }
+        List<User> users=userRepository.findAll();
+//        User currentUser = userRepository.findUserByUsername(principal.getName());
+//        System.out.println(currentUser);
+//        boolean isSuperAdmin = currentUser.getRoles()
+//                .stream()
+//                .anyMatch(role -> role.getRolename() != null &&
+//                        role.getRolename().trim().equalsIgnoreCase("ROLE_SUPERADMIN"));
+//
+//        boolean isAdmin = currentUser.getRoles()
+//                .stream()
+//                .anyMatch(role -> role.getRolename() != null &&
+//                        role.getRolename().trim().equalsIgnoreCase("ROLE_ADMIN"));
+//
+//
+//        if(isSuperAdmin)
+//        {
+//            users=userRepository.findAll();
+//        } else if (isAdmin) {
+//            users=userRepository.findAdminsOnly();
+//
+//        }
+//        else{
+//            users=List.of();
+//        }
         model.addAttribute("users",users);
         return "Users";
     }

@@ -1,9 +1,11 @@
 package tmd.tmdAdmin.data.entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "slider_side")
+@Data
 public class SliderSlide {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,66 +27,4 @@ public class SliderSlide {
     @Column(name="button_url")
     private String buttonUrl;
 
-    public SliderSlide() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
-    }
-
-    public String getButtonText() {
-        return buttonText;
-    }
-
-    public void setButtonText(String buttonText) {
-        this.buttonText = buttonText;
-    }
-
-    public String getButtonUrl() {
-        return buttonUrl;
-    }
-
-    public void setButtonUrl(String buttonUrl) {
-        this.buttonUrl = buttonUrl;
-    }
-
-    @Override
-    public String toString() {
-        return "SliderSlide{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", path='" + path + '\'' +
-                ", subtitle='" + subtitle + '\'' +
-                ", buttonText='" + buttonText + '\'' +
-                ", buttonUrl='" + buttonUrl + '\'' +
-                '}';
-    }
 }

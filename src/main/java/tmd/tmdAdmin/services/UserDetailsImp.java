@@ -4,24 +4,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 import tmd.tmdAdmin.data.entities.User;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserDetailsImp implements UserDetails {
-    @Autowired
-    private User user;
+    private final User user;
 
-    public UserDetailsImp(User user){
-        this.user=user;
-    };
+    public UserDetailsImp(User user) {
+        this.user = user;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRolename()))
-                .collect(Collectors.toList());
+        return user.getRole() == null ? List.of() : List.of(new SimpleGrantedAuthority(user.getRole()));
     }
 
     @Override
