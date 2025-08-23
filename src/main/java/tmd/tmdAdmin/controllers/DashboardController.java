@@ -18,6 +18,10 @@ import java.util.Map;
 @Controller
 public class DashboardController {
     @Autowired
+    private SliderSideRepository sliderSideRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
     private ContactService contactService;
     @Autowired
     private ContactRepository contactRepository;
@@ -66,6 +70,24 @@ public class DashboardController {
         data.put("messages", contactService.getMonthlyCounts());
 
         return data;
+    }
+    @GetMapping("/seeSlider")
+    public String slider(Model model, Principal principal){
+        List<SliderSlide> sliderSlides=sliderSideRepository.findAll();
+        model.addAttribute("sliders",sliderSlides);
+        if(principal !=null){
+            model.addAttribute("username",principal.getName());
+        }
+        return "slider";
+    }
+    @GetMapping("/seeCategories")
+    public String category(Model model, Principal principal){
+        List<Category> categories=categoryRepository.findAll();
+        model.addAttribute("categories",categories);
+        if(principal !=null){
+            model.addAttribute("username",principal.getName());
+        }
+        return "categories";
     }
     @GetMapping("/seeGallery")
     public String seeGallery(Model model,Principal principal){
