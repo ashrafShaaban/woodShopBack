@@ -1,45 +1,64 @@
-const ctx = document.getElementById('dashboardChart');
-let sidebar=document.querySelector(".side-bar");
-let body=document.body;
-
-console.log(ctx);
-console.log("ashraf");
-fetch('/dashboard-data')
-    .then(res => res.json())
-    .then(data => {
-        const ctx = document.getElementById('dashboardChart');
+// src/main/resources/static/js/canvas.js
+document.addEventListener('DOMContentLoaded', function() {
+    var ctx = document.getElementById('dashboardChart');
+    if (ctx) {
         new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: data.labels,
-                datasets: [
-                    {
-                        label: 'Messages',
-                        data: data.messages,
-                        backgroundColor: 'rgba(255, 99, 132, 0.6)'
-                    }
-                ]
+                labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+                datasets: [{
+                    label: '# of Items Added',
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: [
+                        '#A0724F', // --color-secondary
+                        '#8B6349', // --color-tertiary
+                        '#D4AF37', // --color-accent-gold
+                        '#5C4033', // --color-primary
+                        'rgba(43, 29, 20, 0.7)',  // A semi-transparent --color-dark
+                        'rgba(160, 114, 79, 0.7)' // A semi-transparent --color-secondary
+                    ],
+                    borderColor: [
+                        '#A0724F',
+                        '#8B6349',
+                        '#D4AF37',
+                        '#5C4033',
+                        '#2B1D14', // --color-dark
+                        '#A0724F'  // --color-secondary
+                    ],
+                    borderWidth: 1
+                }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
                 plugins: {
-                    legend: { position: 'top' }
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            color: '#2B1D14', // Match var(--color-dark)
+                            font: {
+                                family: 'Poppins', // Match var(--font-body)
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Monthly Activity Overview',
+                        color: '#5C4033', // Match var(--color-primary)
+                        font: {
+                            family: 'Playfair Display', // Match var(--font-heading)
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    }
                 }
             }
         });
-    });
-let ic=document.querySelector("header .userInfo");
-
-ic.onclick=function(){
- document.querySelector(".header .logout").classList.toggle("open");
-}
-document.querySelector(".menu-btn").onclick = () =>{
-   sidebar.classList.toggle("active");
-       body.classList.remove("active");
-
-}
-document.querySelector(".side-bar .closebtn").onclick = ()=>{
-    sidebar.classList.remove("active");
-    body.classList.remove("active");
-
-}
+    }
+});

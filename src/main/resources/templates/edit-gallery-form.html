@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/header :: layout(~{::body})}">
+<head>
+    <title>Edit Album | El Dahman</title>
+    <link rel="stylesheet" th:href="@{/css/gallery.css}">
+</head>
+<body>
+<th:block th:fragment="content">
+    <div class="container py-4">
+        <h1 class="display-4 text-center mb-5 section-heading">Edit Album Details</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <!-- Success/Error Messages -->
+                        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i><span th:text="${successMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${errorMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <form th:action="@{/updateitemGType}" th:object="${galleryType}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" th:field="*{id}" />
+                            <div class="mb-3">
+                                <label for="galleryName" class="form-label">Album Name (English)</label>
+                                <input type="text" class="form-control" id="galleryName" th:field="*{name}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="galleryNameAr" class="form-label">Album Name (Arabic)</label>
+                                <input type="text" class="form-control" id="galleryNameAr" th:field="*{nameAr}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="galleryNameRu" class="form-label">Album Name (Russian)</label>
+                                <input type="text" class="form-control" id="galleryNameRu" th:field="*{nameRu}" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Current Cover Image:</label>
+                                <div th:if="${galleryType.path != null && !galleryType.path.empty}">
+                                    <img th:src="@{/${galleryType.path}}" alt="Current Cover" class="img-thumbnail" style="max-width: 150px; display: block; margin-bottom: 10px;">
+                                    <p class="text-muted"><small>Path: <span th:text="${galleryType.path}"></span></small></p>
+                                </div>
+                                <div th:unless="${galleryType.path != null && !galleryType.path.empty}" class="alert alert-warning">No cover image currently set.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="newCoverImageFile" class="form-label">Upload New Cover Image (Optional)</label>
+                                <input type="file" class="form-control" id="newCoverImageFile" name="newCoverImageFile" accept="image/*">
+                                <div class="form-text">Select a new image if you want to replace the current cover.</div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary action-button">
+                                    <i class="fas fa-save me-2"></i>Save Changes
+                                </button>
+                                <a th:href="@{/gallery}" class="btn btn-secondary action-button">
+                                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

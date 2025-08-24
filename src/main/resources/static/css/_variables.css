@@ -1,0 +1,39 @@
+/* src/main/resources/static/css/_variables.css */
+
+:root {
+    /* Color Palette - Derived from homePage.css analysis */
+    --color-dark: #2B1D14;      /* Deep Charcoal Brown (from rgba(43, 29, 20) in homepage gradients) */
+    --color-primary: #5C4033;   /* Medium Dark Brown (e.g., for sidebar header, strong elements) */
+    --color-secondary: #A0724F; /* Muted Orange-Brown (e.g., for action buttons, highlights) */
+    --color-tertiary: #8B6349;  /* Rusty Brown (e.g., for lighter backgrounds, muted text) */
+    --color-accent-gold: #D4AF37; /* Rich Gold Accent (e.g., active links, special numbers) */
+
+    --color-light: #F8F4E3;     /* Creamy Off-White (e.g., for card backgrounds, light text) */
+    --color-text-light: #F8F4E3; /* Text on dark backgrounds */
+    --color-text-dark: #2B1D14;  /* Text on light backgrounds */
+
+    --color-neutral-bg: #EEE9DC; /* A very subtle light background for general page areas */
+
+    /* Spacing System (consistent with homePage.css) */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 48px;
+    --spacing-xxl: 64px;
+
+    /* Font System */
+    --font-body: 'Poppins', sans-serif;
+    --font-heading: 'Playfair Display', serif; /* An elegant serif font for headings */
+
+    /* Border Radii */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-full: 50%;
+
+    /* Shadows */
+    --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 15px rgba(0, 0, 0, 0.2);
+}

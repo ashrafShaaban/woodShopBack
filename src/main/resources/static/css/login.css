@@ -1,0 +1,93 @@
+/* src/main/resources/static/css/login-styles.css */
+@import url('_variables.css'); /* Import your new variables at the top */
+
+body {
+    /* Background gradient using the new palette. */
+    background: linear-gradient(to right bottom, var(--color-tertiary), var(--color-primary));
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-body);
+    padding: var(--spacing-md);
+}
+
+.login-card {
+    max-width: 450px;
+    width: 100%;
+    padding: var(--spacing-lg); /* Use consistent spacing variable */
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    background-color: var(--color-light); /* Creamy background for card */
+}
+
+/* Adjust login header/brand styling */
+.brand-logo {
+    max-width: 150px;
+    height: auto;
+}
+.brand-name {
+    font-size: 2.2em;
+    font-weight: 700;
+    color: var(--color-dark); /* Dark brand name */
+    margin-top: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+    font-family: var(--font-heading); /* Apply heading font */
+}
+.login-subtitle {
+    font-size: 1.1em;
+    color: var(--color-text-dark); /* Dark muted subtitle */
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Adjust form-floating label color if needed */
+.form-floating > label {
+    color: var(--color-tertiary); /* Muted label color */
+}
+
+.form-floating > .form-control:focus ~ label {
+    color: var(--color-primary); /* Primary color on focus */
+}
+
+.btn-primary {
+    background-color: var(--color-secondary); /* Use secondary for login button */
+    border-color: var(--color-secondary);
+    color: var(--color-text-dark); /* Dark text on secondary button */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary); /* Primary on hover */
+    border-color: var(--color-primary);
+    color: var(--color-text-light); /* Light text on primary hover */
+}
+
+.alert {
+    margin-bottom: var(--spacing-md);
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Keep Bootstrap default alert colors for universally recognized status messages */
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+.forgot-password-link {
+    font-size: 0.85em;
+    color: var(--color-tertiary); /* Muted link color */
+}
+.forgot-password-link:hover {
+    color: var(--color-primary); /* Primary on hover */
+}

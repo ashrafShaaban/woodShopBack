@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/header :: layout(~{::body})}">
+<head>
+    <title>Create New Album | El Dahman</title>
+    <link rel="stylesheet" th:href="@{/css/gallery.css}">
+</head>
+<body>
+<th:block th:fragment="content">
+    <div class="container py-4">
+        <h1 class="display-4 text-center mb-5 section-heading">Create New Gallery Album</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <!-- Success/Error Messages -->
+                        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i><span th:text="${successMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${errorMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <!-- IMPORTANT: enctype="multipart/form-data" is crucial for file uploads -->
+                        <form th:action="@{/addGalleryType}" th:object="${galleryType}" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="galleryName" class="form-label">Album Name (English)</label>
+                                <input type="text" class="form-control" id="galleryName" th:field="*{name}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="galleryNameAr" class="form-label">Album Name (Arabic)</label>
+                                <input type="text" class="form-control" id="galleryNameAr" th:field="*{nameAr}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="galleryNameRu" class="form-label">Album Name (Russian)</label>
+                                <input type="text" class="form-control" id="galleryNameRu" th:field="*{nameRu}" required>
+                            </div>
+                            <!-- Input for Cover Image -->
+                            <div class="mb-3">
+                                <label for="coverImageFile" class="form-label">Upload Album Cover Image</label>
+                                <input type="file" class="form-control" id="coverImageFile" name="coverImageFile" accept="image/*" required>
+                                <div class="form-text">This will be the main image displayed for your album.</div>
+                            </div>
+                            <!-- Input for Multiple Album Images -->
+                            <div class="mb-4">
+                                <label for="albumImageFiles" class="form-label">Upload Album Content Images (Select Multiple)</label>
+                                <input type="file" class="form-control" id="albumImageFiles" name="albumImageFiles" multiple accept="image/*" required>
+                                <div class="form-text">Select one or more image files (e.g., .jpg, .png, .gif) to be part of this album.</div>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary action-button">
+                                    <i class="fas fa-plus-circle me-2"></i>Create Album
+                                </button>
+                                <a th:href="@{/gallery}" class="btn btn-secondary action-button">
+                                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

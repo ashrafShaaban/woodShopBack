@@ -1,10 +1,12 @@
 package tmd.tmdAdmin.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -14,16 +16,18 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import tmd.tmdAdmin.data.repositories.UserRepository;
 import tmd.tmdAdmin.services.UserDetailsServiceImp;
+import tmd.tmdAdmin.storage.FileStorageProperties;
 
-import javax.sql.DataSource; // Import DataSource
-import java.util.UUID;
+import javax.sql.DataSource;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableWebSecurity
+@EnableConfigurationProperties({FileStorageProperties.class})
 public class WebConfig implements WebMvcConfigurer {
 
     private final UserRepository userRepository;
-    private final DataSource dataSource; // Inject DataSource
+    private final DataSource dataSource;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -59,14 +63,12 @@ public class WebConfig implements WebMvcConfigurer {
                 .authorizeHttpRequests(configurer ->
                         configurer
                                 // Allow access to static resources like CSS, JS, images for all
-                                .requestMatchers("/css/**", "/js/**", "/images/**", "/sliders/**", "/videos/**").permitAll()
-                                .requestMatchers("/dashboard").hasAnyRole("ADMIN", "SUPERADMIN")
+                                .requestMatchers("/css/**", "/js/**", "/images/**", "/sliders/**", "/videos/**","/login").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .loginProcessingUrl("/authenticateTheUser")
-                        .permitAll()
+                        .defaultSuccessUrl("/", true) // Redirect to home page on successful login
                 )
                 .logout(logout -> logout
                         .permitAll()
@@ -91,15 +93,25 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/sliders/**")
-                .addResourceLocations("file:///C:/sliders/");
-        registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:///C:/wood-images/");
+//        registry.addResourceHandler("/sliders/**")
+//                .addResourceLocations("file:///C:/sliders/");
+//        registry.addResourceHandler("/images/**")
+//                .addResourceLocations("file:///C:/wood-images/");
+//        registry.addResourceHandler("/videos/**")
+//                .addResourceLocations("file:///C:/videos/");
+
+        registry.addResourceHandler("/gallery/**")
+                .addResourceLocations("file:../../../../Media/gallery/");
         registry.addResourceHandler("/videos/**")
-                .addResourceLocations("file:///C:/videos/");
+                .addResourceLocations("file:../../Media/videos/");
+        registry.addResourceHandler("/slider/**")
+                .addResourceLocations("file:../../Media/slider/");
+        registry.addResourceHandler("/Products/**")
+                .addResourceLocations("file:../../Media/Products/");
 
         // Also ensure default static resources are handled (Bootstrap, custom CSS/JS in src/main/resources/static)
         registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
+        registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/");
         registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
     }
 }

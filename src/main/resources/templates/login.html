@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Dashboard Login</title>
+    <title>El Dahman - Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap CSS -->
@@ -10,95 +10,28 @@
     <!-- Google Fonts - Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome for Icons (using webjars for local serving or CDN) -->
-    <!-- For webjars, add 'org.webjars:font-awesome:6.0.0-beta3' to pom.xml -->
-    <!-- <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.0.0-beta3/css/all.min.css}" /> -->
+    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <style>
-        body {
-            /* Modern full-page background gradient */
-            background: linear-gradient(to right bottom, #4CAF50, #2196F3); /* Example: Green to Blue */
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            min-height: 100vh; /* Ensure it takes full viewport height */
-            display: flex; /* Use flexbox for centering */
-            align-items: center; /* Vertically center content */
-            justify-content: center; /* Horizontally center content */
-            font-family: 'Poppins', sans-serif; /* Apply Google Font */
-            padding: 20px; /* Add some padding for smaller screens */
-        }
+    <link rel="icon" th:href="@{/icons/favicon.ico}" type="image/x-icon">
 
-        .login-card {
-            max-width: 450px; /* Max width of the login form */
-            width: 100%; /* Make it responsive */
-            padding: 30px;
-            border-radius: 15px; /* Rounded corners for the card */
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); /* Soft shadow */
-            background-color: #fff; /* White background for the card */
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #333;
-            font-weight: 600;
-        }
-
-        /* Adjust form-floating label color if needed */
-        .form-floating > label {
-            color: #6c757d; /* Muted label color */
-        }
-
-        .form-floating > .form-control:focus ~ label {
-            color: #0d6efd; /* Bootstrap primary color on focus */
-        }
-
-        .btn-primary {
-            background-color: #2196F3; /* Match primary blue */
-            border-color: #2196F3;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: #1976D2; /* Darker blue on hover */
-            border-color: #1976D2;
-        }
-
-        .alert {
-            margin-bottom: 20px; /* Space between alert and form fields */
-            font-size: 0.9em;
-            display: flex; /* For icon alignment */
-            align-items: center;
-        }
-
-        /* Specific alert colors */
-        .alert-danger {
-            background-color: #f8d7da;
-            color: #721c24;
-            border-color: #f5c6cb;
-        }
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border-color: #c3e6cb;
-        }
-
-        .forgot-password-link {
-            font-size: 0.85em;
-            color: #6c757d; /* Muted link color */
-        }
-        .forgot-password-link:hover {
-            color: #0d6efd; /* Primary blue on hover */
-        }
-    </style>
+    <!-- Custom Login Page Styles -->
+    <link rel="stylesheet" th:href="@{/css/login.css}">
 
 </head>
 <body>
 <div class="card login-card">
     <div class="card-body">
-        <h2 class="login-header">Login to Your Dashboard</h2>
-        <form th:action="@{/authenticateTheUser}" method="post">
+        <!-- Brand Logo and Name Section -->
+        <div class="text-center mb-4">
+            <!-- Replace 'logo.png' with your actual logo file name and path -->
+            <!-- Make sure your logo file is in src/main/resources/static/images/ -->
+            <img th:src="@{/images/logo1.png}" alt="El Dahman Logo" class="brand-logo mb-3">
+            <h1 class="brand-name">El Dahman</h1>
+            <p class="login-subtitle">Login to your dashboard</p>
+        </div>
+
+        <form th:action="@{/login}" method="post">
             <!-- Error and Logout Messages -->
             <div th:if="${param.error}" class="alert alert-danger fade show" role="alert">
                 <i class="fas fa-exclamation-triangle me-2"></i>Invalid username or password.
@@ -122,7 +55,6 @@
             <!-- Remember Me & Forgot Password -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div class="form-check">
-                    <!-- IMPORTANT: The 'name="remember-me"' attribute is crucial for Spring Security -->
                     <input class="form-check-input" type="checkbox" name="remember-me" id="rememberMe">
                     <label class="form-check-label" for="rememberMe">
                         Remember me
@@ -144,7 +76,7 @@
     </div>
 </div>
 
-<!-- Bootstrap JS (optional, for some components like tooltips/popovers) -->
+<!-- Bootstrap JS (optional) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>

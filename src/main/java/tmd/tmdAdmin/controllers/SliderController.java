@@ -122,7 +122,7 @@ public class SliderController {
 //                itemGallery.setPath(oldURL);
 //            }
 //            galleryTypeRepository.save(itemGallery);
-//            return "redirect:/seeGallery";
+//            return "redirect:/gallery";
 //        }
 //        catch (DataIntegrityViolationException e) {
 //            model.addAttribute("error", "the name is must be unique");
