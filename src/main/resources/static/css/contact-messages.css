@@ -1,0 +1,74 @@
+/* src/main/resources/static/css/contact-messages.css */
+@import url('_variables.css'); /* Ensure your variables are imported */
+
+.message-list-card, .message-detail-card {
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-light);
+}
+
+.table thead th {
+    background-color: var(--color-primary); /* Darker brown for table header */
+    color: var(--color-text-light); /* Light text on dark header */
+    border-bottom: 2px solid var(--color-secondary); /* Accent line */
+    font-weight: 600;
+}
+
+.table tbody tr:hover {
+    background-color: var(--color-neutral-bg); /* Light hover effect */
+}
+
+.table tbody td {
+    vertical-align: middle;
+    color: var(--color-text-dark);
+}
+
+/* Style for unread message rows */
+.message-unread {
+    background-color: var(--color-neutral-bg); /* Subtle background for unread */
+    font-weight: 600; /* Bold text for unread */
+}
+.message-unread a {
+    color: var(--color-dark) !important; /* Ensure link color is dark */
+}
+
+.message-content {
+    max-width: 250px; /* Limit width for message preview */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add ellipsis for long messages */
+}
+
+/* Ensure the delete button fits and matches theme */
+.table .btn-danger {
+    background-color: var(--color-tertiary); /* Use your tertiary color */
+    border-color: var(--color-tertiary);
+    color: var(--color-text-light);
+}
+.table .btn-danger:hover {
+    background-color: var(--color-dark); /* Darker on hover */
+    border-color: var(--color-dark);
+}
+
+/* Message Detail Card */
+.message-detail-card .card-header {
+    background-color: var(--color-light);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: var(--spacing-md);
+}
+
+.message-detail-card .message-body {
+    white-space: pre-wrap; /* Preserves whitespace and line breaks in the message */
+    word-wrap: break-word; /* Breaks long words if necessary */
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--color-text-dark);
+}
+
+/* Sidebar unread count badge style */
+.badge-unread-count {
+    font-size: 0.75em; /* Smaller badge text */
+    padding: 0.3em 0.6em; /* Adjust padding */
+    margin-left: auto; /* Push to the right */
+    background-color: var(--color-accent-gold) !important; /* Use your accent gold */
+    color: var(--color-dark) !important; /* Dark text on gold */
+}

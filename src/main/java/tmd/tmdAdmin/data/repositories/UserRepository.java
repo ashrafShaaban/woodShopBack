@@ -7,14 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import tmd.tmdAdmin.data.entities.User;
 
-import java.util.List;
+import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User,Integer> {
-    User findUserByUsername(String username);
-//    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.rolename = 'ROLE_ADMIN'")
-//    List<User> findAdminsOnly();
-@Modifying
-@Transactional
-@Query("UPDATE User u SET u.lastLogin = :lastLogin WHERE u.id = :id")
-void updateLastLogin(@Param("id") int id, @Param("lastLogin") Long lastLogin);
+public interface UserRepository extends JpaRepository<User, Integer> {
+
+    Optional<User> findByUsername(String username);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.lastLogin = :lastLogin WHERE u.id = :id")
+    void updateLastLogin(@Param("id") int id, @Param("lastLogin") Long lastLogin);
 }

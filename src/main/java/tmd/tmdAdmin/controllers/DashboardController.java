@@ -33,8 +33,8 @@ public class DashboardController {
     public String dashboard(Model model, Principal principal, HttpServletRequest request) {
         List<GalleryType> galleries = galleryTypeRepository.findAll();
         int galleryLength = galleries.size() + galleryRepository.findAll().size();
-        List<Contact> contacts = contactRepository.findAll();
-        int contactLength = contacts.size();
+
+        long contactLength = contactRepository.count();
         int videosLength = videosRepository.findAll().size() + videoTypeRepository.findAll().size();
         List<User> users = userRepository.findAll();
         int userSize = users.size();
@@ -47,6 +47,7 @@ public class DashboardController {
         model.addAttribute("contactLength", contactLength);
         model.addAttribute("videosLength", videosLength);
         model.addAttribute("users", userSize);
+        model.addAttribute("unreadMessageCount", contactRepository.countByIsReadFalse());
         model.addAttribute("pageTitle", "Dashboard | El Dahman");
 
         return "index";
@@ -94,7 +95,7 @@ public class DashboardController {
         if (principal != null) {
             model.addAttribute("username", principal.getName());
         }
-        return "adminMessages";
+        return "contact-messages";
     }
 
     @GetMapping("/seeVideos")

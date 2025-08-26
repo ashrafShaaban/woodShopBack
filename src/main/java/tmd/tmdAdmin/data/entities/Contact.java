@@ -34,4 +34,6 @@ public class Contact {
     @Size(max = 500, message = "Message must not exceed 500 characters")
     private String message;
     private LocalDateTime createdAt = LocalDateTime.now();
+    private boolean isRead = false;
+    private LocalDateTime readAt;
 }

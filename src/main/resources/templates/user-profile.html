@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/header :: layout(~{::body})}">
+<head>
+    <title th:text="${pageTitle}"></title>
+    <style>
+        /* Add some basic invalid field styling here or in main.css */
+        .form-control.is-invalid { border-color: #dc3545; }
+        .invalid-feedback { display: block; width: 100%; margin-top: 0.25rem; font-size: 0.875em; color: #dc3545; }
+        .profile-card {
+            max-width: 600px;
+            margin: 0 auto; /* Center the card */
+        }
+    </style>
+</head>
+<body>
+<th:block th:fragment="content">
+    <div class="container py-4">
+        <h1 class="display-4 text-center mb-5 section-heading">User Profile</h1>
+
+        <!-- Success/Error Messages -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i><span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="card shadow-sm profile-card">
+            <div class="card-header bg-primary text-light">
+                <h5 class="mb-0"><i class="fas fa-key me-2"></i>Change Password</h5>
+            </div>
+            <div class="card-body p-4">
+                <form th:action="@{/profile}" th:object="${changePasswordDto}" method="post">
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label">Current Password</label>
+                        <input type="password" class="form-control" id="currentPassword" th:field="*{currentPassword}"
+                               th:classappend="${#fields.hasErrors('currentPassword')} ? 'is-invalid' : ''" required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">New Password</label>
+                        <input type="password" class="form-control" id="newPassword" th:field="*{newPassword}"
+                               th:classappend="${#fields.hasErrors('newPassword') or #fields.hasErrors('global')} ? 'is-invalid' : ''" required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></div>
+                        <!-- Global error for password mismatch -->
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('global')}" th:errors="*{global}"></div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}"
+                               th:classappend="${#fields.hasErrors('confirmPassword') or #fields.hasErrors('global')} ? 'is-invalid' : ''" required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+                        <!-- Global error for password mismatch (displayed once per form) -->
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('global')}" th:errors="*{global}"></div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary action-button">
+                            <i class="fas fa-save me-2"></i>Change Password
+                        </button>
+                        <a th:href="@{/dashboard}" class="btn btn-secondary action-button">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                        </a>
+                    </div>
+                    <!-- CSRF Token: Uncomment if you enable CSRF in WebConfig -->
+                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                </form>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

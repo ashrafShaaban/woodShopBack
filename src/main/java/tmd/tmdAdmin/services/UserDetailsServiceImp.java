@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import tmd.tmdAdmin.data.entities.User;
 import tmd.tmdAdmin.data.repositories.UserRepository;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -18,10 +20,10 @@ public class UserDetailsServiceImp implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user=userRepository.findUserByUsername(username);
-        if(user == null){
+        Optional<User> user=userRepository.findByUsername(username);
+        if(user.isEmpty()){
             throw  new UsernameNotFoundException("invalid username or password");
         }
-        return new UserDetailsImp(user);
+        return new UserDetailsImp(user.get());
     }
 }
