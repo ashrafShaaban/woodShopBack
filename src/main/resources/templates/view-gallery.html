@@ -24,7 +24,7 @@
             <a th:href="@{/gallery}" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left me-2"></i>Back to Albums
             </a>
-            <a th:href="@{/addImagesToAlbum/__${galleryType.id}__}" class="btn btn-primary action-button">
+            <a th:href="@{/gallery/images/add/form/__${galleryType.id}__}" class="btn btn-primary action-button">
                 <i class="fas fa-plus me-2"></i>Add More Images
             </a>
         </div>
@@ -32,7 +32,7 @@
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
             <div class="col" th:each="image : ${images}"> <!-- Iterating over individual Gallery entities -->
                 <div class="card h-100 shadow-sm gallery-image-card">
-                    <img th:src="@{'/' + ${image.path}}" class="card-img-top gallery-img" th:alt="${image.name}" />
+                    <img th:src="@{${image.path}}" class="card-img-top gallery-img" th:alt="${image.name}" />
                     <div class="card-body d-flex flex-column">
                         <h6 class="card-title text-center text-muted flex-grow-1" th:text="${image.name}">Image Name</h6>
                         <div class="d-flex justify-content-center mt-2">
@@ -54,7 +54,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </th:block>
 </body>

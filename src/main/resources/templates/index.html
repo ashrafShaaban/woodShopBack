@@ -1,20 +1,13 @@
 <!DOCTYPE html>
-<!-- This is the crucial line for layout integration -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/header :: layout(~{::body})}">
 <head>
-    <title>Dashboard | El Dahman</title> <!-- This title might be overridden by layout's pageTitle attribute if set -->
-    <!-- Any page-specific CSS or JS should be linked here if not passed via controller -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script th:src="@{/js/canvas.js}"></script>
+    <title>Dashboard | El Dahman</title>
 </head>
 <body>
-<!-- The entire content of this <body> tag will be passed as the 'content' fragment to the layout -->
 <h1 class="h3 mb-4 text-gray-800">Dashboard Overview</h1>
 
-<!-- Stats Cards Row -->
 <div class="row">
-    <!-- Gallery Length Card -->
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card stats-card card-primary">
             <div class="card-body">
@@ -27,7 +20,6 @@
         </div>
     </div>
 
-    <!-- Messages Length Card -->
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card stats-card card-success">
             <div class="card-body">
@@ -40,7 +32,6 @@
         </div>
     </div>
 
-    <!-- Videos Length Card -->
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card stats-card card-info">
             <div class="card-body">
@@ -53,7 +44,6 @@
         </div>
     </div>
 
-    <!-- Users Length Card -->
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card stats-card card-warning">
             <div class="card-body">
@@ -67,7 +57,6 @@
     </div>
 </div>
 
-<!-- Chart Section -->
 <div class="card chart-card">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Monthly Activity Overview</h6>
@@ -78,8 +67,6 @@
         </div>
     </div>
 </div>
-
-<!-- Add more dashboard components here as needed -->
 
 </body>
 </html>

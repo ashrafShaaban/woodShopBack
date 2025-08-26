@@ -37,17 +37,8 @@ import java.util.UUID;
 @Controller
 @RequiredArgsConstructor
 public class VideoController {
-    @InitBinder
-    public void initBinder(WebDataBinder dataBinder){
-
-        StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
-
-        dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
-    }
     private final VideosRepository videosRepository;
-
     private final VideoTypeRepository videoTypeRepository;
-
     private final FileStorageService fileStorageService;
 
     @GetMapping("/addVideotype")

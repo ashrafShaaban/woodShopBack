@@ -4,6 +4,10 @@
 <head>
     <title>Create New Album | El Dahman</title>
     <link rel="stylesheet" th:href="@{/css/gallery.css}">
+    <style> /* Add some basic invalid field styling */
+    .form-control.is-invalid { border-color: #dc3545; }
+    .invalid-feedback { display: block; width: 100%; margin-top: 0.25rem; font-size: 0.875em; color: #dc3545; }
+    </style>
 </head>
 <body>
 <th:block th:fragment="content">
@@ -13,7 +17,7 @@
             <div class="col-md-8 col-lg-6">
                 <div class="card shadow-sm">
                     <div class="card-body p-4">
-                        <!-- Success/Error Messages -->
+                        <!-- Success/Error Messages (from RedirectAttributes or direct model attributes) -->
                         <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
                             <i class="fas fa-check-circle me-2"></i><span th:text="${successMessage}"></span>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -23,31 +27,36 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
-                        <!-- IMPORTANT: enctype="multipart/form-data" is crucial for file uploads -->
-                        <form th:action="@{/saveGalleryType}" th:object="${galleryType}" method="post" enctype="multipart/form-data">
+                        <form th:action="@{/gallery}" th:object="${galleryType}" method="post" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="galleryName" class="form-label">Album Name (English)</label>
-                                <input type="text" class="form-control" id="galleryName" th:field="*{name}" required>
+                                <input type="text" class="form-control" id="galleryName" th:field="*{name}"
+                                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                             </div>
                             <div class="mb-3">
                                 <label for="galleryNameAr" class="form-label">Album Name (Arabic)</label>
-                                <input type="text" class="form-control" id="galleryNameAr" th:field="*{nameAr}" required>
+                                <input type="text" class="form-control" id="galleryNameAr" th:field="*{nameAr}"
+                                       th:classappend="${#fields.hasErrors('nameAr')} ? 'is-invalid' : ''" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nameAr')}" th:errors="*{nameAr}"></div>
                             </div>
                             <div class="mb-3">
                                 <label for="galleryNameRu" class="form-label">Album Name (Russian)</label>
-                                <input type="text" class="form-control" id="galleryNameRu" th:field="*{nameRu}" required>
+                                <input type="text" class="form-control" id="galleryNameRu" th:field="*{nameRu}"
+                                       th:classappend="${#fields.hasErrors('nameRu')} ? 'is-invalid' : ''" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nameRu')}" th:errors="*{nameRu}"></div>
                             </div>
                             <!-- Input for Cover Image -->
                             <div class="mb-3">
                                 <label for="coverImageFile" class="form-label">Upload Album Cover Image</label>
                                 <input type="file" class="form-control" id="coverImageFile" name="coverImageFile" accept="image/*" required>
-                                <div class="form-text">This will be the main image displayed for your album.</div>
+                                <div class="form-text">This will be the main image displayed for your album. (Supported: JPEG, PNG, GIF, BMP, WEBP)</div>
                             </div>
                             <!-- Input for Multiple Album Images -->
                             <div class="mb-4">
                                 <label for="albumImageFiles" class="form-label">Upload Album Content Images (Select Multiple)</label>
                                 <input type="file" class="form-control" id="albumImageFiles" name="albumImageFiles" multiple accept="image/*" required>
-                                <div class="form-text">Select one or more image files (e.g., .jpg, .png, .gif) to be part of this album.</div>
+                                <div class="form-text">Select one or more image files to be part of this album. (Supported: JPEG, PNG, GIF, BMP, WEBP)</div>
                             </div>
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary action-button">
@@ -57,14 +66,14 @@
                                     <i class="fas fa-arrow-left me-2"></i>Cancel
                                 </a>
                             </div>
+                            <!-- CSRF Token: Uncomment if you enable CSRF in WebConfig -->
+                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                         </form>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </th:block>
-
 </body>
 </html>

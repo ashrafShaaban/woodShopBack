@@ -1,4 +1,4 @@
-package tmd.tmdAdmin.security;
+package tmd.tmdAdmin.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import tmd.tmdAdmin.data.repositories.UserRepository;
+import tmd.tmdAdmin.security.LoginSuccessHandler;
 import tmd.tmdAdmin.services.UserDetailsServiceImp;
 import tmd.tmdAdmin.storage.FileStorageProperties;
 

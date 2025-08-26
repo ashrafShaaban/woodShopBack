@@ -21,18 +21,11 @@ public class DashboardController {
 
     private final SliderSideRepository sliderSideRepository;
     private final CategoryRepository categoryRepository;
-
     private final ContactService contactService;
-
     private final ContactRepository contactRepository;
-
     private final GalleryRepository galleryRepository;
-
     private final GalleryTypeRepository galleryTypeRepository;
-
-
     private final VideosRepository videosRepository;
-
     private final UserRepository userRepository;
     private final VideoTypeRepository videoTypeRepository;
 
@@ -92,19 +85,7 @@ public class DashboardController {
         return "categories";
     }
 
-    @GetMapping("/gallery")
-    public String gallery(Model model, Principal principal, HttpServletRequest request) {
-        List<GalleryType> galleries = galleryTypeRepository.findAll();
-        model.addAttribute("galleries", galleries);
-        if (principal != null) {
-            model.addAttribute("username", principal.getName());
-        }
-        model.addAttribute("currentUri", request.getRequestURI());
-        model.addAttribute("pageTitle", "Galleries | El Dahman");
-        model.addAttribute("pageSpecificCss", new String[]{"/css/gallery.css"});
 
-        return "adminGallery";
-    }
 
     @GetMapping("/seemessages")
     public String seemessages(Model model, Principal principal) {

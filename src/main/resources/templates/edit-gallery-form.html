@@ -23,9 +23,8 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
-                        <form th:action="@{/updateitemGType}" th:object="${updatedItem}" method="post" enctype="multipart/form-data">
+                        <form th:action="@{/gallery/update}" th:object="${galleryType}" method="post" enctype="multipart/form-data">
                             <input type="hidden" th:field="*{id}" />
-                            <input type="hidden" name="oldimageURL" th:value="${updatedItem.path}" />
                             <div class="mb-3">
                                 <label for="galleryName" class="form-label">Album Name (English)</label>
                                 <input type="text" class="form-control" id="galleryName" th:field="*{name}" required>
@@ -41,11 +40,11 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Current Cover Image:</label>
-                                <div th:if="${updatedItem.path != null && !updatedItem.path.empty}">
-                                    <img th:src="@{${updatedItem.path}}" alt="Current Cover" class="img-thumbnail" style="max-width: 150px; display: block; margin-bottom: 10px;">
-                                    <p class="text-muted"><small>Path: <span th:text="${updatedItem.path}"></span></small></p>
+                                <div th:if="${galleryType.path != null && !galleryType.path.isEmpty()}">
+                                    <img th:src="@{${galleryType.path}}" alt="Current Cover" class="img-thumbnail" style="max-width: 150px; display: block; margin-bottom: 10px;">
+                                    <p class="text-muted"><small>Path: <span th:text="${galleryType.path}"></span></small></p>
                                 </div>
-                                <div th:unless="${updatedItem.path != null && !updatedItem.path.empty}" class="alert alert-warning">No cover image currently set.</div>
+                                <div th:unless="${galleryType.path != null && !galleryType.path.isEmpty()}" class="alert alert-warning">No cover image currently set.</div>
                             </div>
 
                             <div class="mb-4">
@@ -63,7 +62,6 @@
                                 </a>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>
