@@ -24,7 +24,7 @@
                         </div>
 
                         <!-- IMPORTANT: enctype="multipart/form-data" is crucial for file uploads -->
-                        <form th:action="@{/addGalleryType}" th:object="${galleryType}" method="post" enctype="multipart/form-data">
+                        <form th:action="@{/saveGalleryType}" th:object="${galleryType}" method="post" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="galleryName" class="form-label">Album Name (English)</label>
                                 <input type="text" class="form-control" id="galleryName" th:field="*{name}" required>
@@ -58,11 +58,13 @@
                                 </a>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </th:block>
+
 </body>
 </html>

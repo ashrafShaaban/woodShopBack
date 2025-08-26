@@ -27,6 +27,6 @@ public class User {
 
     private Long createdAt;
     private Long lastLogin;
-    private boolean active;
+    private Boolean active;
     private Long updatedAt;
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/header :: layout(~{::body})}">
 <head>
     <meta charset="UTF-8">
     <title>Messages</title>
@@ -10,7 +11,7 @@
 </head>
 <body style="background-color: #eee;">
 
-<th:block th:replace="~{fragments/header}"></th:block>
+<th:block th:fragment="content">
 <h1 class="text-center">You have Received these messages</h1>
 <section class="messages">
     <div class="table-responsive">
@@ -31,6 +32,7 @@
     </tbody>
 </table>
     </div>
+</th:block>
 </section>
 <script th:src="@{/js/canvas.js}" ></script>
 </body>

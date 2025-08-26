@@ -7,5 +7,5 @@ import tmd.tmdAdmin.data.entities.Videos;
 import java.util.List;
 
 public interface VideosRepository extends JpaRepository<Videos,Integer> {
-    List<Videos> findAllByTypeId(int id);
+    List<Videos> findAllByVideosType_Id(int id);
 }

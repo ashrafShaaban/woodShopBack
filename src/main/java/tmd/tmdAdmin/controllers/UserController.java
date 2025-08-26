@@ -10,10 +10,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tmd.tmdAdmin.data.dto.UserDTO;
 import tmd.tmdAdmin.data.entities.User;
 import tmd.tmdAdmin.data.repositories.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -40,7 +42,7 @@ public class UserController {
       return "addUser";
     }
     @PostMapping("saveUser")
-    public String saveUser(@Valid @ModelAttribute("newUser") UserDTO newUser,BindingResult bindingResult,Model model){
+    public String saveUser(@Valid @ModelAttribute("newUser") UserDTO newUser, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
        if(bindingResult.hasErrors()){
            model.addAttribute("isEdit", false);
            return "addUser";
@@ -50,6 +52,9 @@ public class UserController {
            User user =new User();
            user.setUsername(newUser.getUsername());
            user.setPassword(passwordEncoder.encode(newUser.getPassword()));
+           user.setRole(newUser.getRole());
+           user.setCreatedAt(System.currentTimeMillis());
+           user.setActive(true);
 //           user.setRoles(roles);
            userRepository.save(user);
            return "redirect:/seeUsers";
@@ -68,6 +73,7 @@ public class UserController {
         updateduserDto.setId(updatedUser.getId());
         updateduserDto.setUsername(updatedUser.getUsername());
         updateduserDto.setPassword(updatedUser.getPassword());
+        updateduserDto.setActive(updatedUser.getActive());
 //        updateduserDto.setRolesIds(
 //                updatedUser.getRoles() == null
 //                        ? new ArrayList<>()
@@ -86,10 +92,14 @@ public class UserController {
         }
         try{
             User updateduser=userRepository.findById(newUser.getId()).orElseThrow();
+
             updateduser.setUsername(newUser.getUsername());
             if (newUser.getPassword() != null && !newUser.getPassword().isEmpty()) {
                 updateduser.setPassword(passwordEncoder.encode(newUser.getPassword()));
             }
+            updateduser.setRole(newUser.getRole());
+            updateduser.setUpdatedAt(System.currentTimeMillis());
+            updateduser.setActive(newUser.getActive());
 //            updateduser.setRoles(roles);
             userRepository.save(updateduser);
             return "redirect:/seeUsers";

@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html lang="en"xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/header :: layout(~{::body})}">
 <head>
-    <title>Edit Album | El Dahman</title>
+    <meta charset="UTF-8">
+    <title>Create New video Album</title>
     <link rel="stylesheet" th:href="@{/css/gallery.css}">
 </head>
 <body>
 <th:block th:fragment="content">
     <div class="container py-4">
-        <h1 class="display-4 text-center mb-5 section-heading">Edit Album Details</h1>
+        <h1 class="display-4 text-center mb-5 section-heading">Create New Gallery Album</h1>
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
                 <div class="card shadow-sm">
@@ -23,9 +24,8 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
-                        <form th:action="@{/updateitemGType}" th:object="${updatedItem}" method="post" enctype="multipart/form-data">
-                            <input type="hidden" th:field="*{id}" />
-                            <input type="hidden" name="oldimageURL" th:value="${updatedItem.path}" />
+                        <!-- IMPORTANT: enctype="multipart/form-data" is crucial for file uploads -->
+                        <form th:action="@{/saveVideoType}" th:object="${videoType}" method="post" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="galleryName" class="form-label">Album Name (English)</label>
                                 <input type="text" class="form-control" id="galleryName" th:field="*{name}" required>
@@ -38,37 +38,33 @@
                                 <label for="galleryNameRu" class="form-label">Album Name (Russian)</label>
                                 <input type="text" class="form-control" id="galleryNameRu" th:field="*{nameRu}" required>
                             </div>
-
+                            <!-- Input for Cover Image -->
                             <div class="mb-3">
-                                <label class="form-label">Current Cover Image:</label>
-                                <div th:if="${updatedItem.path != null && !updatedItem.path.empty}">
-                                    <img th:src="@{${updatedItem.path}}" alt="Current Cover" class="img-thumbnail" style="max-width: 150px; display: block; margin-bottom: 10px;">
-                                    <p class="text-muted"><small>Path: <span th:text="${updatedItem.path}"></span></small></p>
-                                </div>
-                                <div th:unless="${updatedItem.path != null && !updatedItem.path.empty}" class="alert alert-warning">No cover image currently set.</div>
+                                <label for="coverVideoFile" class="form-label">Upload Album Cover Image</label>
+                                <input type="file" class="form-control" id="coverVideoFile" name="coverVideoFile" accept="image/*" required>
+                                <div class="form-text">This will be the main image displayed for your album.</div>
                             </div>
-
+                            <!-- Input for Multiple Album Images -->
                             <div class="mb-4">
-                                <label for="newCoverImageFile" class="form-label">Upload New Cover Image (Optional)</label>
-                                <input type="file" class="form-control" id="newCoverImageFile" name="newCoverImageFile" accept="image/*">
-                                <div class="form-text">Select a new image if you want to replace the current cover.</div>
+                                <label for="albumVideoFiles" class="form-label">Upload Album Content Videos (Select Multiple)</label>
+                                <input type="file" class="form-control" id="albumVideoFiles" name="albumVideoFiles" multiple accept="video/*" required>
+                                <div class="form-text">Select one or more video files (e.g., Mp4) to be part of this album.</div>
                             </div>
-
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary action-button">
-                                    <i class="fas fa-save me-2"></i>Save Changes
+                                    <i class="fas fa-plus-circle me-2"></i>Create Album
                                 </button>
                                 <a th:href="@{/gallery}" class="btn btn-secondary action-button">
                                     <i class="fas fa-arrow-left me-2"></i>Cancel
                                 </a>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </th:block>
+
 </body>
 </html>

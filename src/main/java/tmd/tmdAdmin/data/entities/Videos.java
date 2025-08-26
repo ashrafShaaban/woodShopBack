@@ -14,5 +14,8 @@ public class Videos {
     private int id;
     private String name;
     private String path;
-    private Integer typeId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "type_id", nullable = false)
+    private VideosType videosType;
+
 }

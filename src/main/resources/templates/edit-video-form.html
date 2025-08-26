@@ -23,7 +23,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
-                        <form th:action="@{/updateitemGType}" th:object="${updatedItem}" method="post" enctype="multipart/form-data">
+                        <form th:action="@{/updatevideoType}" th:object="${updatedItem}" method="post" enctype="multipart/form-data">
                             <input type="hidden" th:field="*{id}" />
                             <input type="hidden" name="oldimageURL" th:value="${updatedItem.path}" />
                             <div class="mb-3">

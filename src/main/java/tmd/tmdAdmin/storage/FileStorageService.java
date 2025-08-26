@@ -8,6 +8,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import tmd.tmdAdmin.data.entities.Gallery; // User's Gallery entity (for individual images)
 import tmd.tmdAdmin.data.entities.GalleryType; // User's GalleryType entity (for albums)
+import tmd.tmdAdmin.data.entities.Videos;
+import tmd.tmdAdmin.data.entities.VideosType;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -95,7 +97,18 @@ public class FileStorageService {
 
         return galleryImage;
     }
+    public Videos storeGalleryContentVideo(MultipartFile file, VideosType videosType, String videoCaption) throws IOException {
+        String storedFilename = saveFileToDisk(file);
+        String relativeWebPath = uploadSubDir + storedFilename;
 
+        // Create a Gallery entity, setting only name and path as per your table structure
+        Videos video = new Videos();
+        video.setName(videoCaption != null && !videoCaption.isEmpty() ? videoCaption : file.getOriginalFilename());
+        video.setPath(relativeWebPath); // This is the user's 'path' field
+        video.setVideosType(videosType); // Link to the galleryType (album)
+
+        return video;
+    }
 
     /**
      * Loads a file as a Spring Resource based on its full relative web path.

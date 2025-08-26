@@ -51,4 +51,7 @@ public class UserDetailsImp implements UserDetails {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
+    public User getUser() {
+        return this.user;
+    }
 }

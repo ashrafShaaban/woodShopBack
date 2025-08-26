@@ -56,7 +56,7 @@ public class GalleryController {
         return "add-gallery-form";
     }
 
-    @PostMapping("/addGalleryType")
+    @PostMapping("/saveGalleryType")
     public String addGalleryType(@ModelAttribute GalleryType galleryType, // Bind album properties (name, nameAr, nameRu)
                                  @RequestParam("coverImageFile") MultipartFile coverImageFile, // Album cover image file
                                  @RequestParam("albumImageFiles") MultipartFile[] albumImageFiles, // Album content image files
@@ -86,6 +86,7 @@ public class GalleryController {
                     // This creates a 'Gallery' entity (which represents an image)
                     // We can pass original filename as caption for Gallery.name
                     Gallery albumImage = fileStorageService.storeGalleryContentImage(file, savedGalleryType, file.getOriginalFilename());
+                    albumImage.setGalleryType(savedGalleryType);
                     galleryRepository.save(albumImage); // Save the image entity
                     savedGalleryType.addImage(albumImage); // Add image to album's list
                 }
@@ -101,33 +102,33 @@ public class GalleryController {
         return "redirect:/gallery";
     }
 
-    @PostMapping("/save")
-    public String saveitem(@Valid @ModelAttribute("item") GalleryItemTypeDTO onegallery, BindingResult bindingResult, @RequestParam(value = "imageFile",required = false) MultipartFile imageurl,Model model) throws IOException {
-        if(bindingResult.hasErrors()){
-            return "addGalleryType";
-        }
-    try {
-        String folder = "C:/wood-images/";
-        String filename = UUID.randomUUID() + "_" + imageurl.getOriginalFilename();
-        Path filepath = Paths.get(folder, filename);
-        Files.write(filepath, imageurl.getBytes());
-
-        GalleryType gallery = new GalleryType();
-        gallery.setName(onegallery.getName());
-        gallery.setNameAr(onegallery.getName_ar());
-        gallery.setNameRu(onegallery.getName_ru());
-        gallery.setPath("/images/" + filename);
-
-        galleryTypeRepository.save(gallery);
-        return "redirect:/gallery";
-    }
-    catch (DataIntegrityViolationException e) {
-        model.addAttribute("error", "the name is must be unique");
-        return "addGalleryType";
-    }
-
-    }
-
+//    @PostMapping("/save")
+//    public String saveitem(@Valid @ModelAttribute("item") GalleryItemTypeDTO onegallery, BindingResult bindingResult, @RequestParam(value = "imageFile",required = false) MultipartFile imageurl,Model model) throws IOException {
+//        if(bindingResult.hasErrors()){
+//            return "addGalleryType";
+//        }
+//    try {
+//        String folder = "C:/wood-images/";
+//        String filename = UUID.randomUUID() + "_" + imageurl.getOriginalFilename();
+//        Path filepath = Paths.get(folder, filename);
+//        Files.write(filepath, imageurl.getBytes());
+//
+//        GalleryType gallery = new GalleryType();
+//        gallery.setName(onegallery.getName());
+//        gallery.setNameAr(onegallery.getName_ar());
+//        gallery.setNameRu(onegallery.getName_ru());
+//        gallery.setPath("/images/" + filename);
+//
+//        galleryTypeRepository.save(gallery);
+//        return "redirect:/gallery";
+//    }
+//    catch (DataIntegrityViolationException e) {
+//        model.addAttribute("error", "the name is must be unique");
+//        return "addGalleryType";
+//    }
+//
+//    }
+//
     @GetMapping("/viewGallery/{galleryTypeId}")
     public String viewGalleryImages(@PathVariable("galleryTypeId") Integer galleryTypeId, Model model, HttpServletRequest request) {
         GalleryType galleryType = galleryTypeRepository.findById(galleryTypeId)
@@ -145,43 +146,57 @@ public class GalleryController {
 
         return "view-gallery";  // New template for viewing images in an album
     }
-    @PostMapping("/updateitemGType")
+    @GetMapping("/updateitemGType")
     public String updateitem(@RequestParam("itemId") int id,Model model){
         GalleryType updateditem=galleryTypeRepository.findById(id).orElseThrow();
         model.addAttribute("updatedItem",updateditem);
-        return "updateGType";
+        return "edit-gallery-form";
     }
-    @PostMapping("/saveUpdate")
-    public String saveafterUpdate(@Valid @ModelAttribute("updatedItem") GalleryType itemGallery, BindingResult bindingResult, @RequestParam("newimageURL") MultipartFile newURL, @RequestParam("oldimageURL") String oldURL , Model model) throws IOException {
-       if(bindingResult.hasErrors()){
-           return "updateGType";
-       }
+    @PostMapping("/updateitemGType")
+    public String saveUpdate(
+            @Valid @ModelAttribute("updatedItem") GalleryType itemGallery,
+            BindingResult bindingResult,
+            @RequestParam(value = "newCoverImageFile", required = false) MultipartFile newCoverImageFile,
+            @RequestParam(value = "oldimageURL", required = false) String oldURL,
+            RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            return "edit-gallery-form"; // back to form with validation errors
+        }
+
         try {
-            if (!newURL.isEmpty()) {
-                if (itemGallery.getPath() != null) {
-                    String folder = "C:/wood-images/" + Paths.get(itemGallery.getPath());
-                    File oldimgFile = new File(folder);
-                    if (oldimgFile.exists()) oldimgFile.delete();
-                }
+            // 1. Load the existing entity from DB
+            GalleryType existing = galleryTypeRepository.findById(itemGallery.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Album not found with id " + itemGallery.getId()));
 
-                String newimgFolder = "C:/wood-images/";
-                String newImgname = UUID.randomUUID() + "_" + newURL.getOriginalFilename();
-                Path newpath = Paths.get(newimgFolder, newImgname);
-                Files.write(newpath, newURL.getBytes());
-                itemGallery.setPath("/images/" + newImgname);
+            // 2. Update text fields
+            existing.setName(itemGallery.getName());
+            existing.setNameAr(itemGallery.getNameAr());
+            existing.setNameRu(itemGallery.getNameRu());
+
+            // 3. Handle cover image
+            if (newCoverImageFile != null && !newCoverImageFile.isEmpty()) {
+                // Upload new cover → replace
+                String coverImagePath = fileStorageService.storeGalleryTypeCover(newCoverImageFile);
+                existing.setPath(coverImagePath);
+            } else {
+                // Keep the old one
+                existing.setPath(oldURL);
             }
-            else {
-                System.out.println(oldURL);
-                itemGallery.setPath(oldURL);
-            }
-            galleryTypeRepository.save(itemGallery);
-            return "redirect:/gallery";
-        }
-        catch (DataIntegrityViolationException e) {
-            model.addAttribute("error", "the name is must be unique");
-            return "updateGType";
+
+            // 4. Save back
+            galleryTypeRepository.save(existing);
+
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Gallery album '" + existing.getName() + "' updated successfully!");
+
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to upload cover image: " + e.getMessage());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "An error occurred: " + e.getMessage());
         }
 
+        return "redirect:/gallery";
     }
     @PostMapping("/deleteitemGType")
     public String remove(@RequestParam("itemId") int deletedone){
@@ -194,104 +209,105 @@ public class GalleryController {
     }
 
 
-    @GetMapping("/additeminGType/{typeId}")
-    public String additeminGType(@PathVariable("typeId") int id,Model model){
-
+    @GetMapping("/addImagesToAlbum/{typeId}")
+    public String addGallery(@PathVariable("typeId") int id,Model model){
+        System.out.println(id);
         Gallery gallery=new Gallery();
        GalleryType galleryType= galleryTypeRepository.findById(id).orElseThrow();
         model.addAttribute("gallery",gallery);
         model.addAttribute("galleryType",galleryType);
-        return "additeminGType";
+        return "add-images-to-album-form";
     }
-    @PostMapping("/saveiteminGType")
-    public String saveitemType(@Valid @ModelAttribute("gallery") Gallery gallery,BindingResult bindingResult,@RequestParam("typeId") int typeId, @Valid @RequestParam("imageFile")MultipartFile imageurl,Model model ) throws IOException {
-        if(bindingResult.hasErrors()){
-            GalleryType galleryType= galleryTypeRepository.findById(typeId).orElseThrow();
-            model.addAttribute("galleryType",galleryType);
-            return  "additeminGType";
+    @PostMapping("/addImagesToAlbum/{typeId}")
+    public String saveGallery(@RequestParam("newAlbumImageFiles") MultipartFile newImageURL,@PathVariable("typeId") int typeId,Model model ) throws IOException {
+//        if(bindingResult.hasErrors()){
+//            GalleryType galleryType= galleryTypeRepository.findById(typeId).orElseThrow();
+//            model.addAttribute("galleryType",galleryType);
+//            return  "additeminGType";
+//        }
+//    try {
+        Gallery gallery=new Gallery();
+        if (newImageURL != null && !newImageURL.isEmpty()) {
+            // Upload new cover → replace
+            String newImagePath = fileStorageService.storeGalleryTypeCover(newImageURL);
+            gallery.setPath(newImagePath);
+            gallery.setName(newImageURL.getOriginalFilename());
         }
-    try {
-
-        String folder="C:/wood-images/";
-        String filename= UUID.randomUUID() + "_" + imageurl.getOriginalFilename();
-        Path filepath= Paths.get(folder,filename);
-        Files.write(filepath,imageurl.getBytes());
-
-        Gallery galleryitem=new Gallery();
-        galleryitem.setName(gallery.getName());
-        galleryitem.setGalleryType(galleryTypeRepository.findById(typeId).orElseThrow());
-        galleryitem.setPath("/images/" + filename);
 
 
-        galleryRepository.save(galleryitem);
 
 
-        return "redirect:/admingalleryType/" + typeId;
-    }
-    catch (DataIntegrityViolationException e) {
-        model.addAttribute("error", "the name is must be unique");
+        gallery.setGalleryType(galleryTypeRepository.findById(typeId).orElseThrow());
 
-        GalleryType galleryType= galleryTypeRepository.findById(typeId).orElseThrow();
-        model.addAttribute("gallery",gallery);
-        model.addAttribute("galleryType",galleryType);
-        return "additeminGType";
-    }
+        galleryRepository.save(gallery);
+
+
+        return "redirect:/viewGallery/" + typeId;
+//    }
+//    catch (DataIntegrityViolationException e) {
+//        model.addAttribute("error", "the name is must be unique");
+//
+//        GalleryType galleryType= galleryTypeRepository.findById(typeId).orElseThrow();
+//        model.addAttribute("gallery",gallery);
+//        model.addAttribute("galleryType",galleryType);
+//        return "additeminGType";
+//    }
 
     }
-    @PostMapping("/updateGallery")
-    public String updateiteminGType(@RequestParam("itemId") int id,Model model){
-        Gallery updateGallery=galleryRepository.findById(id).orElseThrow();
-        model.addAttribute("updateGallery",updateGallery);
-        return "updateGallery";
-    }
-    @PostMapping("/saveGalleryAfterUpdate")
-    public String saveainGTfterUpdate(@Valid @ModelAttribute("updateGallery") Gallery itemGallery,BindingResult bindingResul, @RequestParam("newimageURL") MultipartFile newURL, @RequestParam("oldimageURL") String oldURL,BindingResult bindingResult,Model model ) throws IOException {
-           if(bindingResult.hasErrors()){
-               return "updateGallery";
-           }
-         try {
-             if (!newURL.isEmpty()) {
-                 if (itemGallery.getPath() != null) {
-                     String folder = "C:/wood-images/" + Paths.get(itemGallery.getPath());
-                     File oldimgFile = new File(folder);
-                     if (oldimgFile.exists()) oldimgFile.delete();
-                 }
-
-                 String newimgFolder = "C:/wood-images/";
-                 String newImgname = UUID.randomUUID() + "_" + newURL.getOriginalFilename();
-                 Path newpath = Paths.get(newimgFolder, newImgname);
-                 Files.write(newpath, newURL.getBytes());
-                 itemGallery.setPath("/images/" + newImgname);
-             }
-             else {
-                 System.out.println(oldURL);
-                 itemGallery.setPath(oldURL);
-             }
-             galleryRepository.save(itemGallery);
-             return "redirect:/gallery" ;
-         }
-         catch (DataIntegrityViolationException e) {
-             model.addAttribute("error", "the name is must be unique");
-             return "updateGallery";
-         }
-    }
-    @PostMapping("/deleteGallery")
-    public String deleteiteminGType(@RequestParam("itemId") int deletedone){
+//    @PostMapping("/updateGallery")
+//    public String updateiteminGType(@RequestParam("itemId") int id,Model model){
+//        Gallery updateGallery=galleryRepository.findById(id).orElseThrow();
+//        model.addAttribute("updateGallery",updateGallery);
+//        return "updateGallery";
+//    }
+//    @PostMapping("/saveGalleryAfterUpdate")
+//    public String saveainGTfterUpdate(@Valid @ModelAttribute("updateGallery") Gallery itemGallery,BindingResult bindingResul, @RequestParam("newimageURL") MultipartFile newURL, @RequestParam("oldimageURL") String oldURL,BindingResult bindingResult,Model model ) throws IOException {
+//           if(bindingResult.hasErrors()){
+//               return "updateGallery";
+//           }
+//         try {
+//             if (!newURL.isEmpty()) {
+//                 if (itemGallery.getPath() != null) {
+//                     String folder = "C:/wood-images/" + Paths.get(itemGallery.getPath());
+//                     File oldimgFile = new File(folder);
+//                     if (oldimgFile.exists()) oldimgFile.delete();
+//                 }
+//
+//                 String newimgFolder = "C:/wood-images/";
+//                 String newImgname = UUID.randomUUID() + "_" + newURL.getOriginalFilename();
+//                 Path newpath = Paths.get(newimgFolder, newImgname);
+//                 Files.write(newpath, newURL.getBytes());
+//                 itemGallery.setPath("/images/" + newImgname);
+//             }
+//             else {
+//                 System.out.println(oldURL);
+//                 itemGallery.setPath(oldURL);
+//             }
+//             galleryRepository.save(itemGallery);
+//             return "redirect:/gallery" ;
+//         }
+//         catch (DataIntegrityViolationException e) {
+//             model.addAttribute("error", "the name is must be unique");
+//             return "updateGallery";
+//         }
+//    }
+    @PostMapping("/deleteImage")
+    public String deleteiteminGType(@RequestParam("imageId") int deletedone,@RequestParam("galleryTypeId") int typeId){
         Gallery deleteGallery=galleryRepository.findById(deletedone).orElseThrow();
-        int typeId =deleteGallery.getGalleryType().getId();
-        galleryRepository.delete(deleteGallery);
-        return "redirect:/admingalleryType/" + typeId;
-    }
-    @GetMapping("/admingalleryType/{id}")
-    public String galleryType(@PathVariable("id") int typeid, Model model, Principal principal){
-        System.out.println(typeid);
-        List<Gallery> galleries=galleryRepository.findAllByGalleryType_Id(typeid);
-        model.addAttribute("galaries",galleries);
-        model.addAttribute("TypeId",typeid);
-        if(principal !=null){
-            model.addAttribute("username",principal.getName());
-        }
-        return "adminGalleryType_Details";
 
+        galleryRepository.delete(deleteGallery);
+        return "redirect:/viewGallery/" + typeId;
     }
+//    @GetMapping("/admingalleryType/{id}")
+//    public String galleryType(@PathVariable("id") int typeid, Model model, Principal principal){
+//        System.out.println(typeid);
+//        List<Gallery> galleries=galleryRepository.findAllByGalleryType_Id(typeid);
+//        model.addAttribute("galaries",galleries);
+//        model.addAttribute("TypeId",typeid);
+//        if(principal !=null){
+//            model.addAttribute("username",principal.getName());
+//        }
+//        return "adminGalleryType_Details";
+//
+//    }
 }

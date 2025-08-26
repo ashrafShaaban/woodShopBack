@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/header :: layout(~{::body})}">
 <head>
     <meta charset="UTF-8">
     <title>Our Slider</title>
@@ -9,7 +10,7 @@
 
 </head>
 <body>
-<th:block th:replace="~{fragments/header}"></th:block>
+<th:block th:fragment="content">
 <section class="videos-container ">
     <h1 class="heading">Our Slider</h1>
     <a th:href="@{/addnewSlider}" class="add">add new Slider</a>

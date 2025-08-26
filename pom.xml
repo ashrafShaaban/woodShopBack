@@ -74,6 +74,11 @@
             <artifactId>lombok</artifactId>
             <version>1.18.38</version>
         </dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 
 	<build>

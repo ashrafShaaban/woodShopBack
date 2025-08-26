@@ -117,20 +117,26 @@ public class DashboardController {
     }
 
     @GetMapping("/seeVideos")
-    public String seeVideos(Model model, Principal principal) {
+    public String seeVideos(Model model, Principal principal,HttpServletRequest request) {
         List<VideosType> videos = videoTypeRepository.findAll();
         model.addAttribute("videos", videos);
         if (principal != null) {
             model.addAttribute("username", principal.getName());
         }
+        model.addAttribute("currentUri", request.getRequestURI());
+        model.addAttribute("pageTitle", "Galleries | El Dahman");
+        model.addAttribute("pageSpecificCss", new String[]{"/css/gallery.css"});
+
         return "Videos";
     }
 
     @GetMapping("/seeUsers")
-    public String seeUsers(Model model, Principal principal) {
+    public String seeUsers(Model model, Principal principal,HttpServletRequest request) {
         if (principal != null) {
             model.addAttribute("username", principal.getName());
         }
+        model.addAttribute("currentUri", request.getRequestURI());
+        model.addAttribute("pageTitle", "Galleries | El Dahman");
         List<User> users = userRepository.findAll();
 //        User currentUser = userRepository.findUserByUsername(principal.getName());
 //        System.out.println(currentUser);

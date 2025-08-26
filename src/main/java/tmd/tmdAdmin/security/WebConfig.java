@@ -28,6 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final UserRepository userRepository;
     private final DataSource dataSource;
+    private final LoginSuccessHandler loginSuccessHandler;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -69,6 +70,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true) // Redirect to home page on successful login
+                        .successHandler(loginSuccessHandler)
                 )
                 .logout(logout -> logout
                         .permitAll()

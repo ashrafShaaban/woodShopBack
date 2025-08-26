@@ -62,7 +62,7 @@
                 <a th:href="@{/seemessages}" class="nav-link"><i
                         class="fa-solid fa-envelope me-2"></i><span>Messages</span></a>
             </li>
-            <li sec:authorize="hasAnyRole('ADMIN','SUPERADMIN')"
+            <li
                 th:classappend="${currentUri == '/seeUsers' ? 'active' : ''}">
                 <a th:href="@{/seeUsers}" class="nav-link"><i class="fa-solid fa-users me-2"></i><span>Users</span></a>
             </li>

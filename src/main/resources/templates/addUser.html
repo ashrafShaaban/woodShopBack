@@ -1,46 +1,104 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+
+      th:replace="~{fragments/header :: layout(~{::body})}">
 <head>
     <meta charset="UTF-8">
-    <title>Gallery</title>
+    <title>Create New User | El Dahman</title>
     <link rel="stylesheet" th:href="@{/css/main.css}" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Add/Update User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="icon" th:href="@{/icons/favicon.ico}" type="image/x-icon">
+
+    <!-- Custom Login Page Styles -->
+    <link rel="stylesheet" th:href="@{/css/gallery.css}">
 
 </head>
-<body style="padding-left:0;">
+<body >
+<div class="container py-4">
+    <h1 class="display-4 text-center mb-5 section-heading">Create New User</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <!-- Success/Error Messages -->
+                    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle me-2"></i><span th:text="${successMessage}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${errorMessage}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
 
 
-<h1 class="text-center headform">Add/Update User</h1>
-<form class="itemform" method="post" th:object="${newUser}" th:action="${isEdit} ? @{/saveuserUpdate} :@{/saveUser}" >
-    <div th:if="${error}" class="error-message" th:text="${error}"></div>
-    <input type="hidden" th:field="*{id}"/>
+                    <h1 class="text-center headform">Add/Update User</h1>
+                    <form th:action="${isEdit} ? @{/saveuserUpdate} :@{/saveUser}" th:object="${newUser}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" th:field="*{id}">
 
-    <input type="text" th:field="*{username}"   placeholder="enter username"/>
-    <span th:if="${#fields.hasErrors('username')}"
-          th:errors="*{username}"
-          class="notvalid"/>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" th:field="*{username}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="text" class="form-control" id="password" th:field="*{password}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="role" class="form-label">Role</label>
+                            <input type="text" class="form-control" id="role" th:field="*{role}" required>
+                        </div>
+                        <input type="checkbox" th:field="*{active}" /> Active
+                        <!-- Input for Cover Image -->
 
-    <input type="password" th:field="*{password}" th:if="${!isEdit}"  placeholder="enter password">
-    <span th:if="${#fields.hasErrors('password')}"
-          th:errors="*{password}"
-          class="notvalid"/>
-    <input type="password" th:field="*{password}" th:if="${isEdit}" placeholder="Leave empty to keep old password"/>
-    <label>Select roles:</label>
-    <div th:each="role : ${roles}">
-        <input type="checkbox" th:value="${role.id}" th:field="*{rolesIds}"
-               >
-<!--        th:checked="${newUser.rolesIds.contains(role.id)}"-->
-        <label th:for="${#ids.prev('rolesIds')}" th:text="${role.rolename}"></label>
-
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary action-button">
+                                <i class="fas fa-plus-circle me-2"></i>Create/Update User
+                            </button>
+                            <a th:href="@{/seeUsers}" class="btn btn-secondary action-button">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <span th:if="${#fields.hasErrors('rolesIds')}"
-          th:errors="*{rolesIds}"
-          class="notvalid"
-    />
-    <input class="btn btn-info w-25" type="submit" value="add user">
-</form>
-<a th:href="@{/seeUsers}" class="backto" >Go back to Users</a>
+</div>
+
+
+<!--<form class="itemform" method="post" th:object="${newUser}" th:action="${isEdit} ? @{/saveuserUpdate} :@{/saveUser}" >-->
+<!--    <div th:if="${error}" class="error-message" th:text="${error}"></div>-->
+<!--    <input type="hidden" th:field="*{id}"/>-->
+
+<!--    <input type="text" th:field="*{username}"   placeholder="enter username"/>-->
+<!--    <span th:if="${#fields.hasErrors('username')}"-->
+<!--          th:errors="*{username}"-->
+<!--          class="notvalid"/>-->
+
+<!--    <input type="password" th:field="*{password}" th:if="${!isEdit}"  placeholder="enter password">-->
+<!--    <span th:if="${#fields.hasErrors('password')}"-->
+<!--          th:errors="*{password}"-->
+<!--          class="notvalid"/>-->
+<!--    <input type="password" th:field="*{password}" th:if="${isEdit}" placeholder="Leave empty to keep old password"/>-->
+<!--    <input type="text" th:field="*{role}" placeholder="enter the role"/>-->
+<!--    <input type="checkbox" th:field="*{active}" /> Active-->
+<!--    <input class="btn btn-info w-25" type="submit" value="add user">-->
+
+<!--</form>-->
+<!--<a th:href="@{/seeUsers}" class="backto" >Go back to Users</a>-->
 <script th:src="@{/js/admin.js}" ></script>
 </body>
 </html>
