@@ -7,10 +7,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import tmd.tmdAdmin.data.entities.Gallery;
-import tmd.tmdAdmin.data.entities.GalleryType;
-import tmd.tmdAdmin.data.entities.Videos;
-import tmd.tmdAdmin.data.entities.VideosType;
+import tmd.tmdAdmin.data.entities.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -129,6 +126,18 @@ public class FileStorageService {
         video.setVideosType(videosType); // Link to the galleryType (album)
 
         return video;
+    }
+    public Products storeProductsforCategory(MultipartFile file, Category category, String imageCaption) throws IOException {
+        String storedFilename = saveFileToDisk(file);
+        String absoluteWebPath = webAccessPrefix + storedFilename;
+
+        // Create a Gallery entity, setting only name and path as per your table structure
+        Products product = new Products();
+        product.setName(imageCaption != null && !imageCaption.isEmpty() ? imageCaption : file.getOriginalFilename());
+        product.setPath(absoluteWebPath); // This is the user's 'path' field, now absolute
+        product.setCategory(category); // Link to the galleryType (album)
+
+        return product;
     }
 
     /**

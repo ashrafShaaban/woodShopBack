@@ -104,3 +104,7 @@
         width: 100%; /* Full width on small screens */
     }
 }
+textarea{
+width:300px;
+height:100px;
+}

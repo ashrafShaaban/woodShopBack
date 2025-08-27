@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -39,6 +40,24 @@ public class Category {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private Set<Products> products;
+    private List<Products> products =new ArrayList<>() ;
+
+    @ManyToMany
+    @JoinTable(
+            name = "categories_dimensions",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns =@JoinColumn(name = "dimensions_id")
+    )
+    private List<Dimension> dimensions;
+
+    public void addProduct(Products product) {
+        products.add(product);
+        product.setCategory(this);
+    }
+
+    public void removeProduct(Products product) {
+        products.remove(product);
+        product.setCategory(null);
+    }
 
 }

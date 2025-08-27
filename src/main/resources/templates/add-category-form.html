@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/header :: layout(~{::body})}">
+<head>
+    <title>Create New Album | El Dahman</title>
+    <link rel="stylesheet" th:href="@{/css/gallery.css}">
+    <style> /* Add some basic invalid field styling */
+    .form-control.is-invalid { border-color: #dc3545; }
+    .invalid-feedback { display: block; width: 100%; margin-top: 0.25rem; font-size: 0.875em; color: #dc3545; }
+    </style>
+</head>
+<body>
+<th:block th:fragment="content">
+    <div class="container py-4">
+        <h1 class="display-4 text-center mb-5 section-heading">Create New Gallery Album</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <!-- Success/Error Messages (from RedirectAttributes or direct model attributes) -->
+                        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i><span th:text="${successMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${errorMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <form th:action="@{/category}" th:object="${category}" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="categoryName" class="form-label">Category Name (English)</label>
+                                <input type="text" class="form-control" id="categoryName" th:field="*{name}"
+                                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="categoryNameAr" class="form-label">Category Name (Arabic)</label>
+                                <input type="text" class="form-control" id="categoryNameAr" th:field="*{nameAr}"
+                                       th:classappend="${#fields.hasErrors('nameAr')} ? 'is-invalid' : ''" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nameAr')}" th:errors="*{nameAr}"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="categoryNameRu" class="form-label">Album Name (Russian)</label>
+                                <input type="text" class="form-control" id="categoryNameRu" th:field="*{nameRu}"
+                                       th:classappend="${#fields.hasErrors('nameRu')} ? 'is-invalid' : ''" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nameRu')}" th:errors="*{nameRu}"></div>
+                            </div>
+                            <!-- Input for Cover Image -->
+                            <div class="mb-3">
+                                <label for="categoryDescription" class="form-label">Category Description (English)</label>
+                                <textarea id="categoryDescription" cols="30" rows="30" th:field="*{description}"
+                                          th:classappend="${#fields.hasErrors('description')} ? 'is-invalid' : ''" required />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="categoryDescriptionAr" class="form-label">Category Description (English)</label>
+                                <textarea id="categoryDescriptionAr" cols="30" rows="30" th:field="*{descriptionAr}"
+                                          th:classappend="${#fields.hasErrors('descriptionAr')} ? 'is-invalid' : ''" required />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('descriptionAr')}" th:errors="*{descriptionAr}"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="categoryDescriptionRu" class="form-label">Category Description (Arabic)</label>
+                                <textarea id="categoryDescriptionRu" cols="30" rows="30" th:field="*{descriptionRu}"
+                                          th:classappend="${#fields.hasErrors('descriptionRu')} ? 'is-invalid' : ''" required />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('descriptionRu')}" th:errors="*{descriptionRu}"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="categoryMaterial" class="form-label">Category Material</label>
+                                <input type="text" id="categoryMaterial"  th:field="*{material}"
+                                          th:classappend="${#fields.hasErrors('material')} ? 'is-invalid' : ''" required />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('material')}" th:errors="*{material}"></div>
+                            </div>
+
+                            <!-- Input for Multiple Products -->
+                            <div class="mb-4">
+                                <label for="albumProducts" class="form-label">Upload Album Category Products (Select Multiple)</label>
+                                <input type="file" class="form-control" id="albumProducts" name="albumProducts" multiple accept="image/*" required>
+                                <div class="form-text">Select one or more image Products to be part of the Category.</div>
+                            </div>
+                            <div class="mb-3">
+                                <h5>Add Dimension</h5>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="depth" class="form-label">Depth</label>
+                                        <input type="text" class="form-control" id="depth" th:field="*{dimensions[0].depth}" />
+                                    </div>
+                                    <div class="col">
+                                        <label for="height" class="form-label">Height</label>
+                                        <input type="text" class="form-control" id="height" th:field="*{dimensions[0].height}" />
+                                    </div>
+                                    <div class="col">
+                                        <label for="width" class="form-label">Width</label>
+                                        <input type="text" class="form-control" id="width" th:field="*{dimensions[0].width}" />
+                                    </div>
+                                    <div class="col">
+                                        <label for="unit" class="form-label">Unit</label>
+                                        <input type="text" class="form-control" id="unit" th:field="*{dimensions[0].unit}" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary action-button">
+                                    <i class="fas fa-plus-circle me-2"></i>Create Album
+                                </button>
+                                <a th:href="@{/category}" class="btn btn-secondary action-button">
+                                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                                </a>
+                            </div>
+                            <!-- CSRF Token: Uncomment if you enable CSRF in WebConfig -->
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</th:block>
+</body>
+</html>

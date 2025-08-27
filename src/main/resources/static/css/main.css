@@ -1,6 +1,9 @@
 /* src/main/resources/static/css/main.css */
 @import url('_variables.css'); /* Import your new variables at the top */
-
+textarea{
+width:300px;
+height:100px;
+}
 /* General body and typography */
 body {
     font-family: var(--font-body);

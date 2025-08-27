@@ -132,28 +132,28 @@ public class GalleryController {
         return "redirect:/gallery";
     }
 
-    @PostMapping("/image/delete")
-    public String deleteImage(@RequestParam("imageId") Integer imageId,
-                              @RequestParam("galleryTypeId") Integer galleryTypeId,
-                              RedirectAttributes redirectAttributes) {
-        try {
-            Gallery imageToDelete = galleryRepository.findById(imageId)
-                    .orElseThrow(() -> new RuntimeException("Image not found with ID: " + imageId));
+        @PostMapping("/deleteImage")
+        public String deleteImage(@RequestParam("imageId") Integer imageId,
+                                  @RequestParam("galleryTypeId") Integer galleryTypeId,
+                                  RedirectAttributes redirectAttributes) {
+            try {
+                Gallery imageToDelete = galleryRepository.findById(imageId)
+                        .orElseThrow(() -> new RuntimeException("Image not found with ID: " + imageId));
 
-            // Delete file from disk using the path stored in Gallery.path
-            fileStorageService.deleteFile(imageToDelete.getPath());
-            galleryRepository.delete(imageToDelete);
+                // Delete file from disk using the path stored in Gallery.path
+                fileStorageService.deleteFile(imageToDelete.getPath());
+                galleryRepository.delete(imageToDelete);
 
-            redirectAttributes.addFlashAttribute("successMessage", "Image deleted successfully!");
-        } catch (IOException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete image file: " + e.getMessage());
-            e.printStackTrace();
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "An error occurred during image deletion: " + e.getMessage());
-            e.printStackTrace();
+                redirectAttributes.addFlashAttribute("successMessage", "Image deleted successfully!");
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete image file: " + e.getMessage());
+                e.printStackTrace();
+            } catch (Exception e) {
+                redirectAttributes.addFlashAttribute("errorMessage", "An error occurred during image deletion: " + e.getMessage());
+                e.printStackTrace();
+            }
+            return "redirect:/view-gallery/" + galleryTypeId;
         }
-        return "redirect:/viewGallery/" + galleryTypeId;
-    }
 
     @PostMapping("/delete")
     public String deleteGalleryType(@RequestParam("itemId") Integer galleryTypeId,
