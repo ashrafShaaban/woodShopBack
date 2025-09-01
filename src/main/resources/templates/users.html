@@ -38,7 +38,7 @@
     <thead class="table-dark">
     <th th:text="#{username}">name</th>
     <th style="width: 15%;" th:text="#{userrole}">Role</th>
-    <th style="width: 20%;" th:text="#{userpass}">Password</th>
+    <th style="width: 20%;" th:text="#{userpass}" sec:authorize="hasRole('SUPERADMIN')">Password</th>
     <th style="width: 25%;" th:text="#{useraction}" sec:authorize="hasRole('SUPERADMIN')">Actions</th>
     </thead>
     <tbody>
@@ -46,7 +46,7 @@
     <tr th:each="user : ${users}">
       <td th:text="${user.username}"></td>
       <td th:text="${user.role}"></td>
-      <td  th:text="${user.password}"></td>
+      <td  th:text="${user.password}" sec:authorize="hasRole('SUPERADMIN')"></td>
       <td  sec:authorize="hasRole('SUPERADMIN')">
         <div class="btns d-flex gap-2" >
           <form method="post" th:action="@{/users/updateUser(userId=${user.id})}">
