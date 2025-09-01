@@ -55,7 +55,7 @@ public class UserController {
            User user =new User();
            user.setUsername(newUser.getUsername());
            user.setPassword(passwordEncoder.encode(newUser.getPassword()));
-           user.setRole(newUser.getRole());
+            user.setRole("ROLE_" + newUser.getRole());
            user.setCreatedAt(System.currentTimeMillis());
            user.setActive(true);
 //           user.setRoles(roles);

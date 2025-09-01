@@ -1,7 +1,7 @@
 /* src/main/resources/static/css/main.css */
 @import url('_variables.css'); /* Import your new variables at the top */
 textarea{
-width:300px;
+width:350px;
 height:100px;
 }
 /* General body and typography */
@@ -25,7 +25,13 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     min-height: 100vh;
 }
-
+.nav-item.dropdown{
+margin-right:5px;
+}
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0; /* يخليها تلزق في الزر */
+}
 /* --- Sidebar Styles --- */
 #sidebar {
     min-width: 250px;
@@ -279,4 +285,30 @@ a[aria-expanded="true"] {
     #content.active::before {
         display: block;
     }
+}
+.table td,
+.table th {
+  white-space: nowrap;
+}
+
+@media (max-width: 991px) {
+  .table td,
+  .table th {
+    white-space: normal;   /* يخلي النص يلف */
+    word-break: break-word;
+    font-size: 12px;       /* يقلل الخط */
+    padding: 4px 6px;      /* يقلل المسافة */
+  }
+
+  /* الأزرار */
+  .btns form button {
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+
+  /* العمود بتاع الـ Actions */
+  .btns {
+    flex-direction: column;   /* يخلي الأزرار تحت بعض بدل جنب بعض */
+    gap: 4px;
+  }
 }

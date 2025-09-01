@@ -48,7 +48,7 @@ public class DashboardController {
         model.addAttribute("videosLength", videosLength);
         model.addAttribute("users", userSize);
         model.addAttribute("unreadMessageCount", contactRepository.countByIsReadFalse());
-        model.addAttribute("pageTitle", "Dashboard | El Dahman");
+
 
         return "index";
     }
@@ -77,24 +77,30 @@ public class DashboardController {
     }
 
     @GetMapping("/seeCategories")
-    public String category(Model model, Principal principal) {
+    public String category(Model model, Principal principal,HttpServletRequest request) {
         List<Category> categories = categoryRepository.findAll();
         model.addAttribute("categories", categories);
         if (principal != null) {
             model.addAttribute("username", principal.getName());
         }
+        model.addAttribute("currentUri", request.getRequestURI());
+
+        model.addAttribute("pageSpecificCss", new String[]{"/css/gallery.css"});
         return "categories";
     }
 
 
 
     @GetMapping("/seemessages")
-    public String seemessages(Model model, Principal principal) {
+    public String seemessages(Model model, Principal principal,HttpServletRequest request) {
         List<Contact> contacts = contactRepository.findAll();
         model.addAttribute("messages", contacts);
         if (principal != null) {
             model.addAttribute("username", principal.getName());
         }
+        model.addAttribute("currentUri", request.getRequestURI());
+        model.addAttribute("pageTitle", "Videos | El Dahman");
+        model.addAttribute("pageSpecificCss", new String[]{"/css/gallery.css"});
         return "contact-messages";
     }
 
@@ -106,10 +112,10 @@ public class DashboardController {
             model.addAttribute("username", principal.getName());
         }
         model.addAttribute("currentUri", request.getRequestURI());
-        model.addAttribute("pageTitle", "Galleries | El Dahman");
+
         model.addAttribute("pageSpecificCss", new String[]{"/css/gallery.css"});
 
-        return "Videos";
+        return "videos";
     }
 
     @GetMapping("/seeUsers")
@@ -118,33 +124,11 @@ public class DashboardController {
             model.addAttribute("username", principal.getName());
         }
         model.addAttribute("currentUri", request.getRequestURI());
-        model.addAttribute("pageTitle", "Galleries | El Dahman");
+        model.addAttribute("pageTitle", "Users | El Dahman");
         List<User> users = userRepository.findAll();
-//        User currentUser = userRepository.findUserByUsername(principal.getName());
-//        System.out.println(currentUser);
-//        boolean isSuperAdmin = currentUser.getRoles()
-//                .stream()
-//                .anyMatch(role -> role.getRolename() != null &&
-//                        role.getRolename().trim().equalsIgnoreCase("ROLE_SUPERADMIN"));
-//
-//        boolean isAdmin = currentUser.getRoles()
-//                .stream()
-//                .anyMatch(role -> role.getRolename() != null &&
-//                        role.getRolename().trim().equalsIgnoreCase("ROLE_ADMIN"));
-//
-//
-//        if(isSuperAdmin)
-//        {
-//            users=userRepository.findAll();
-//        } else if (isAdmin) {
-//            users=userRepository.findAdminsOnly();
-//
-//        }
-//        else{
-//            users=List.of();
-//        }
+
         model.addAttribute("users", users);
-        return "Users";
+        return "users";
     }
 
 

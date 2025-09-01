@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import tmd.tmdAdmin.data.entities.Category;
 import tmd.tmdAdmin.data.entities.Gallery;
 import tmd.tmdAdmin.data.entities.GalleryType;
 import tmd.tmdAdmin.data.repositories.GalleryRepository;
@@ -19,6 +20,7 @@ import tmd.tmdAdmin.utils.ModelAttributes;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -152,7 +154,7 @@ public class GalleryController {
                 redirectAttributes.addFlashAttribute("errorMessage", "An error occurred during image deletion: " + e.getMessage());
                 e.printStackTrace();
             }
-            return "redirect:/view-gallery/" + galleryTypeId;
+            return "redirect:/gallery?galleryTypeId=" + galleryTypeId;
         }
 
     @PostMapping("/delete")
@@ -209,6 +211,13 @@ public class GalleryController {
             GalleryType existingGalleryType = galleryTypeRepository.findById(galleryType.getId())
                     .orElseThrow(() -> new RuntimeException("Gallery album not found with ID: " + galleryType.getId()));
             galleryType.setPath(existingGalleryType.getPath());
+            return "edit-gallery-form";
+        }
+        Optional<GalleryType> existingByName = galleryTypeRepository.findByName(galleryType.getName());
+        if (existingByName.isPresent() && existingByName.get().getId() !=galleryType.getId()) {
+            bindingResult.rejectValue("name", "name.duplicate", "Gallery with this name already exists.");
+            model.addAttribute("currentUri", request.getRequestURI());
+            model.addAttribute("pageTitle", "Edit Gallery | El Dahman");
             return "edit-gallery-form";
         }
 

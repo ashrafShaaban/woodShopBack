@@ -2,13 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/header :: layout(~{::body})}">
 <head>
-    <title>Contact Messages | El Dahman</title>
+    <title th:text="#{mPagetitle}">Contact Messages | El Dahman</title>
     <link rel="stylesheet" th:href="@{/css/contact-messages.css}">
 </head>
 <body>
 <th:block th:fragment="content">
     <div class="container-fluid py-4">
-        <h1 class="display-4 text-center mb-5 section-heading">User Contact Messages</h1>
+        <h1 class="display-4 text-center mb-5 section-heading" th:text="#{usermessage}">User Contact Messages</h1>
 
         <!-- Success/Error Messages (from RedirectAttributes) -->
         <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
@@ -22,7 +22,7 @@
 
         <div class="card shadow-sm message-list-card">
             <div class="card-body">
-                <div th:if="${messages.isEmpty()}" class="alert alert-info text-center" role="alert">
+                <div th:if="${messages.isEmpty()}" class="alert alert-info text-center" role="alert" th:text="#{nomessage}">
                     No contact messages found.
                 </div>
                 <div th:unless="${messages.isEmpty()}" class="table-responsive">
@@ -30,14 +30,14 @@
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>Status</th> <!-- New Status Column -->
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Subject</th>
-                            <th>Message Preview</th> <!-- Renamed for clarity -->
-                            <th>Received At</th>
-                            <th>Actions</th>
+                            <th th:text="#{status}">Status</th> <!-- New Status Column -->
+                            <th th:text="#{sendername}">Name</th>
+                            <th th:text="#{senderEmail}">Email</th>
+                            <th th:text="#{senderPhone}">Phone</th>
+                            <th th:text="#{subject}">Subject</th>
+                            <th th:text="#{messagepreview}">Message Preview</th> <!-- Renamed for clarity -->
+                            <th th:text="#{receviedat}">Received At</th>
+                            <th th:text="#{messageActions}">Actions</th>
                         </tr>
                         </thead>
                         <tbody>

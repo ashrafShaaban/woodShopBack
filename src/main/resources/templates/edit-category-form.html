@@ -2,13 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/header :: layout(~{::body})}">
 <head>
-    <title>Edit Category | El Dahman</title>
+    <title th:text="#{catedittitle}" >Edit Category | El Dahman</title>
     <link rel="stylesheet" th:href="@{/css/gallery.css}">
 </head>
 <body>
 <th:block th:fragment="content">
     <div class="container py-4">
-        <h1 class="display-4 text-center mb-5 section-heading">Edit Category Details</h1>
+        <h1 class="display-4 text-center mb-5 section-heading" th:text="#{editCat}">Edit Category Details</h1>
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
                 <div class="card shadow-sm">
@@ -26,59 +26,75 @@
                         <form th:action="@{/category/update}" th:object="${category}" method="post" enctype="multipart/form-data">
                             <input type="hidden" th:field="*{id}" />
                             <div class="mb-3">
-                                <label for="categoryName" class="form-label">Category Name (English)</label>
-                                <input type="text" class="form-control" id="categoryName" th:field="*{name}" required>
+                                <label for="categoryName" class="form-label" th:text="#{catnameEn}">Category Name (English)</label>
+                                <input type="text" class="form-control" id="categoryName" th:field="*{name}"
+                                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"   required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+
                             </div>
                             <div class="mb-3">
-                                <label for="categoryNameAr" class="form-label">Category Name (Arabic)</label>
-                                <input type="text" class="form-control" id="categoryNameAr" th:field="*{nameAr}" required>
+                                <label for="categoryNameAr" class="form-label" th:text="#{catnameAr}">Category Name (Arabic)</label>
+                                <input type="text" class="form-control" id="categoryNameAr" th:field="*{nameAr}"
+                                       th:classappend="${#fields.hasErrors('nameAr')} ? 'is-invalid' : ''" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nameAr')}" th:errors="*{nameAr}"></div>
+
                             </div>
                             <div class="mb-3">
-                                <label for="categoryNameRu" class="form-label">Category Name (Russian)</label>
-                                <input type="text" class="form-control" id="categoryNameRu" th:field="*{nameRu}" required>
+                                <label for="categoryNameRu" class="form-label" th:text="#{catnameRu}">Category Name (Russian)</label>
+                                <input type="text" class="form-control" id="categoryNameRu" th:field="*{nameRu}"
+                                       th:classappend="${#fields.hasErrors('nameRu')} ? 'is-invalid' : ''"  required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nameRu')}" th:errors="*{nameRu}"></div>
                             </div>
                             <div class="mb-3">
-                                <label for="categoryDescription" class="form-label">Category Description (English)</label>
+                                <label for="categoryDescription" class="form-label" th:text="#{catdescEn}">Category Description (English)</label>
                                 <textarea id="categoryDescription" cols="30" rows="30" th:field="*{description}"
                                           th:classappend="${#fields.hasErrors('description')} ? 'is-invalid' : ''" required />
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
                             </div>
                             <div class="mb-3">
-                                <label for="categoryDescriptionAr" class="form-label">Category Description (English)</label>
+                                <label for="categoryDescriptionAr" class="form-label" th:text="#{catdescAr}">Category Description (Arabic)</label>
                                 <textarea id="categoryDescriptionAr" cols="30" rows="30" th:field="*{descriptionAr}"
                                           th:classappend="${#fields.hasErrors('descriptionAr')} ? 'is-invalid' : ''" required />
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('descriptionAr')}" th:errors="*{descriptionAr}"></div>
                             </div>
                             <div class="mb-3">
-                                <label for="categoryDescriptionRu" class="form-label">Category Description (Arabic)</label>
+                                <label for="categoryDescriptionRu" class="form-label" th:text="#{cardescRu}">Category Description (Russian)</label>
                                 <textarea id="categoryDescriptionRu" cols="30" rows="30" th:field="*{descriptionRu}"
                                           th:classappend="${#fields.hasErrors('descriptionRu')} ? 'is-invalid' : ''" required />
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('descriptionRu')}" th:errors="*{descriptionRu}"></div>
                             </div>
                             <div class="mb-3">
-                                <label for="categoryMaterial" class="form-label">Category Material</label>
+                                <label for="categoryMaterial" class="form-label" th:text="#{material}">Category Material</label>
                                 <input type="text" id="categoryMaterial"  th:field="*{material}"
                                        th:classappend="${#fields.hasErrors('material')} ? 'is-invalid' : ''" required />
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('material')}" th:errors="*{material}"></div>
                             </div>
                             <div class="mb-3">
-                                <h5>Edit Dimension</h5>
-                                <div class="row">
+                                <h5 th:text="#{editdimension}">Edit Dimension</h5>
+                                <div th:each="dim, stat : ${category.dimensions}" class="row dimension-row">
                                     <div class="col">
-                                        <label for="depth" class="form-label">Depth</label>
-                                        <input type="text" class="form-control" id="depth" th:field="*{dimensions[0].depth}" />
+                                        <label class="form-label" th:text="#{depth}">Depth</label>
+                                        <input type="text" class="form-control"
+                                               th:field="*{dimensions[__${stat.index}__].depth}"
+                                               th:name="|dimensions[${stat.index}].depth|"/>
                                     </div>
                                     <div class="col">
-                                        <label for="height" class="form-label">Height</label>
-                                        <input type="text" class="form-control" id="height" th:field="*{dimensions[0].height}" />
+                                        <label class="form-label" th:text="#{height}">Height</label>
+                                        <input type="text" class="form-control"
+                                               th:field="*{dimensions[__${stat.index}__].height}"
+                                               th:name="|dimensions[${stat.index}].height|"/>
                                     </div>
                                     <div class="col">
-                                        <label for="width" class="form-label">Width</label>
-                                        <input type="text" class="form-control" id="width" th:field="*{dimensions[0].width}" />
+                                        <label class="form-label" th:text="#{width}">Width</label>
+                                        <input type="text" class="form-control"
+                                               th:field="*{dimensions[__${stat.index}__].width}"
+                                               th:name="|dimensions[${stat.index}].width|"/>
                                     </div>
                                     <div class="col">
-                                        <label for="unit" class="form-label">Unit</label>
-                                        <input type="text" class="form-control" id="unit" th:field="*{dimensions[0].unit}" />
+                                        <label class="form-label" th:text="#{unit}">Unit</label>
+                                        <input type="text" class="form-control"
+                                               th:field="*{dimensions[__${stat.index}__].unit}"
+                                               th:name="|dimensions[${stat.index}].unit|"/>
                                     </div>
                                 </div>
                             </div>
@@ -88,13 +104,14 @@
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary action-button">
-                                    <i class="fas fa-save me-2"></i>Save Changes
+                                    <i class="fas fa-save me-2"></i> <span th:text="#{savecat}">Save Changes</span>
                                 </button>
                                 <a th:href="@{/category}" class="btn btn-secondary action-button">
-                                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                                    <i class="fas fa-arrow-left me-2"></i> <span th:text="#{back}">Cancel</span>
                                 </a>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>

@@ -36,41 +36,39 @@
         <div class="sidebar-header">
             <a th:href="@{/}">
                 <img th:src="@{/images/logo1.png}" alt="El Dahman Logo" class="sidebar-logo">
-                <h3 class="sidebar-brand">El Dahman</h3>
+                <h3 class="sidebar-brand" th:text="#{nav.companyname}"></h3>
             </a>
         </div>
 
         <ul class="list-unstyled components">
             <!-- Changed to use 'currentUri' from model -->
             <li th:classappend="${currentUri == '/' ? 'active' : ''}">
-                <a th:href="@{/}" class="nav-link"><i class="fa-solid fa-gauge me-2"></i><span>Dashboard</span></a>
+                <a th:href="@{/}" class="nav-link"><i class="fa-solid fa-gauge me-2"></i><span th:text="#{nav.dashboard}"></span></a>
             </li>
-            <li th:classappend="${currentUri == '/seeSlider' ? 'active' : ''}">
-                <a th:href="@{/seeSlider}" class="nav-link"><i
-                        class="fa-solid fa-image me-2"></i><span>Sliders</span></a>
-            </li>
+
             <li th:classappend="${currentUri == '/seeGategory' ? 'active' : ''}">
-                <a th:href="@{/category}" class="nav-link"><i class="fa-solid fa-layer-group me-2"></i><span>Categories</span></a>
+                <a th:href="@{/category}" class="nav-link"><i class="fa-solid fa-layer-group me-2"></i><span th:text="#{nav.categories}" ></span></a>
             </li>
             <li th:classappend="${currentUri == '/gallery' ? 'active' : ''}">
                 <a th:href="@{/gallery}" class="nav-link"><i
-                        class="fa-solid fa-photo-film me-2"></i><span>Gallery</span></a>
+                        class="fa-solid fa-photo-film me-2"></i><span th:text="#{nav.gallery}"></span></a>
             </li>
             <li th:classappend="${currentUri == '/seeVideos' ? 'active' : ''}">
                 <a th:href="@{/seeVideos}" class="nav-link"><i
-                        class="fa-solid fa-video me-2"></i><span>Videos</span></a>
+                        class="fa-solid fa-video me-2"></i><span th:text="#{nav.videos}"></span></a>
             </li>
             <li th:classappend="${currentUri == '/contacts' ? 'active' : ''}">
                 <a th:href="@{/contacts}" class="nav-link d-flex justify-content-between align-items-center">
-                    <span><i class="fa-solid fa-envelope me-2"></i>Messages</span>
+                    <i class="fa-solid fa-envelope me-2"></i>
                     <span th:if="${unreadMessageCount > 0}"
                           class="badge rounded-pill bg-danger text-light badge-unread-count"
                           th:text="${unreadMessageCount}">0</span>
+                    <span th:text="#{nav.messages}"></span>
                 </a>
             </li>
             <li
                     th:classappend="${currentUri == '/seeUsers' ? 'active' : ''}">
-                <a th:href="@{/seeUsers}" class="nav-link"><i class="fa-solid fa-users me-2"></i><span>Users</span></a>
+                <a th:href="@{/seeUsers}" class="nav-link"><i class="fa-solid fa-users me-2"></i><span th:text="#{nav.users}"></span></a>
             </li>
         </ul>
     </nav>
@@ -83,21 +81,40 @@
                 <button type="button" id="sidebarCollapse" class="btn btn-info me-3 d-lg-none">
                     <i class="fas fa-bars"></i>
                 </button>
-                <a class="navbar-brand text-primary fw-bold d-none d-md-block" href="#">Dashboard Overview</a>
+                <a class="navbar-brand text-primary fw-bold d-none d-md-block" href="#" th:text="#{nav.dashOverview}"></a>
 
                 <div class="d-flex align-items-center ms-auto">
                     <!-- User Info Dropdown -->
                     <span class="navbar-text me-3 d-none d-lg-block">
-                        Welcome, <strong sec:authentication="name">User</strong>!
+                       <span th:text="#{nav.welcome}"></span> <strong sec:authentication="name">User</strong>!
                     </span>
+                    <div class="nav-item dropdown">
+
+                        <a class="nav-link dropdown-toggle text-dark" href="#" id="languageDropdown"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+                            <span th:text="#{nav.language}"></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                            <li>
+                                <a class="dropdown-item" href="?lang=en" th:text="#{nav.language.english}"></a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="?lang=ar" th:text="#{nav.language.arabic}"></a>
+                            </li>
+
+                        </ul>
+                    </div>
+
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownUser" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-user-circle fa-lg me-1"></i>
                             <span class="d-none d-md-inline" sec:authentication="name"></span>
+
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownUser">
-                            <li><a class="dropdown-item" th:href="@{/profile}"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" th:href="@{/profile}" th:text="#{nav.profile}"><i class="fas fa-user me-2" ></i>Profile</a></li>
 <!--                            <li th:classappend="${currentUri == '/profile' ? 'active' : ''}">-->
 <!--                                <a  class="nav-link"><i class="fas fa-user-circle me-2"></i><span>Profile</span></a>-->
 <!--                            </li>-->
@@ -107,13 +124,14 @@
                             <li>
                                 <form action="#" th:action="@{/logout}" method="post" class="dropdown-item p-0">
                                     <button type="submit"
-                                            class="btn btn-link text-decoration-none text-danger w-100 text-start ps-3 py-2">
-                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                            class="btn btn-link text-decoration-none text-danger w-100 text-start ps-3 py-2" >
+                                        <i class="fas fa-sign-out-alt me-2"></i> <span th:text="#{nav.logout}">Logout</span>
                                     </button>
                                 </form>
                             </li>
                         </ul>
                     </div>
+
                 </div>
             </div>
         </nav>

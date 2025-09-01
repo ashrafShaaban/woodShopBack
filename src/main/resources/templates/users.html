@@ -26,46 +26,45 @@
   </div>
 
   <div class="d-flex justify-content-end mb-4">
-    <a th:href="@{/addUser}" class="btn btn-secondary px-4 py-2 add-new-button">
-      <i class="fas fa-plus-circle me-2"></i>Create New User
+    <a th:href="@{/users/addUser}" class="btn btn-secondary px-4 py-2 add-new-button" sec:authorize="hasRole('SUPERADMIN')">
+      <i class="fas fa-plus-circle me-2"></i><span th:text="#{createuser}"> </span>
     </a>
   </div>
 
-<section  class="users">
+  <section  class="users">
 
-    <div class="table-responsive">
-<table class="table table-bordered table-striped mt-2 " style="width:100%;table-layot:auto;">
-  <thead class="table-dark">
-  <th>name</th>
-  <th>role</th>
-  <th >password</th>
-  <th >Actions</th>
+      <div class="table-responsive-sm">
+        <table class="table table-bordered table-striped table-sm">
+    <thead class="table-dark">
+    <th th:text="#{username}">name</th>
+    <th style="width: 15%;" th:text="#{userrole}">Role</th>
+    <th style="width: 20%;" th:text="#{userpass}">Password</th>
+    <th style="width: 25%;" th:text="#{useraction}" sec:authorize="hasRole('SUPERADMIN')">Actions</th>
+    </thead>
+    <tbody>
 
-  </thead>
-  <tbody>
+    <tr th:each="user : ${users}">
+      <td th:text="${user.username}"></td>
+      <td th:text="${user.role}"></td>
+      <td  th:text="${user.password}"></td>
+      <td  sec:authorize="hasRole('SUPERADMIN')">
+        <div class="btns d-flex gap-2" >
+          <form method="post" th:action="@{/users/updateUser(userId=${user.id})}">
+            <input type="hidden" th:value="${user.id}">
+            <button type="submit" class="btn btn-info btn-sm" th:text="#{edit}" >edit</button>
+          </form>
+          <form method="post" th:action="@{/users/deleteUser(userId=${user.id})}">
+            <input type="hidden" th:value="${user.id}">
+            <button type="submit" class="btn btn-danger btn-sm" th:text="#{delete}">delete</button>
+          </form>
+        </div>
+      </td>
+    </tr>
 
-  <tr th:each="user : ${users}">
-    <td th:text="${user.username}"></td>
-    <td th:text="${user.role}"></td>
-    <td  th:text="${user.password}"></td>
-    <td  >
-      <div class="btns">
-        <form method="post" th:action="@{/updateUser(userId=${user.id})}">
-          <input type="hidden" th:value="${user.id}">
-          <button type="submit" class="btn btn-info btn-sm">edit</button>
-        </form>
-        <form method="post" th:action="@{/deleteUser(userId=${user.id})}">
-          <input type="hidden" th:value="${user.id}">
-          <button type="submit" class="btn btn-danger btn-sm">delete</button>
-        </form>
+    </tbody>
+  </table>
       </div>
-    </td>
-  </tr>
-
-  </tbody>
-</table>
-    </div>
-</section>
+  </section>
 
 </th:block>
 

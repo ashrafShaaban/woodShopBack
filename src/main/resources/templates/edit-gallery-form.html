@@ -2,13 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/header :: layout(~{::body})}">
 <head>
-    <title>Edit Album | El Dahman</title>
+    <title th:text="#{galedittitle}">Edit Album | El Dahman</title>
     <link rel="stylesheet" th:href="@{/css/gallery.css}">
 </head>
 <body>
 <th:block th:fragment="content">
     <div class="container py-4">
-        <h1 class="display-4 text-center mb-5 section-heading">Edit Album Details</h1>
+        <h1 class="display-4 text-center mb-5 section-heading" th:text="#{galedit}">Edit Album Details</h1>
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
                 <div class="card shadow-sm">
@@ -26,39 +26,43 @@
                         <form th:action="@{/gallery/update}" th:object="${galleryType}" method="post" enctype="multipart/form-data">
                             <input type="hidden" th:field="*{id}" />
                             <div class="mb-3">
-                                <label for="galleryName" class="form-label">Album Name (English)</label>
-                                <input type="text" class="form-control" id="galleryName" th:field="*{name}" required>
+                                <label for="galleryName" class="form-label" th:text="#{galnameEn}">Album Name (English)</label>
+                                <input type="text" class="form-control" id="galleryName" th:field="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+
                             </div>
                             <div class="mb-3">
-                                <label for="galleryNameAr" class="form-label">Album Name (Arabic)</label>
-                                <input type="text" class="form-control" id="galleryNameAr" th:field="*{nameAr}" required>
+                                <label for="galleryNameAr" class="form-label" th:text="#{galnameAr}">Album Name (Arabic)</label>
+                                <input type="text" class="form-control" id="galleryNameAr" th:field="*{nameAr}"  th:classappend="${#fields.hasErrors('nameAr')} ? 'is-invalid' : ''" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nameAr')}" th:errors="*{nameAr}"></div>
                             </div>
                             <div class="mb-3">
-                                <label for="galleryNameRu" class="form-label">Album Name (Russian)</label>
-                                <input type="text" class="form-control" id="galleryNameRu" th:field="*{nameRu}" required>
+                                <label for="galleryNameRu" class="form-label" th:text="#{galnameRu}">Album Name (Russian)</label>
+                                <input type="text" class="form-control" id="galleryNameRu" th:field="*{nameRu}"  th:classappend="${#fields.hasErrors('nameRu')} ? 'is-invalid' : ''" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nameRu')}" th:errors="*{nameRu}"></div>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Current Cover Image:</label>
+                                <label class="form-label" th:text="#{currentcover}">Current Cover Image:</label>
                                 <div th:if="${galleryType.path != null && !galleryType.path.isEmpty()}">
                                     <img th:src="@{${galleryType.path}}" alt="Current Cover" class="img-thumbnail" style="max-width: 150px; display: block; margin-bottom: 10px;">
                                     <p class="text-muted"><small>Path: <span th:text="${galleryType.path}"></span></small></p>
                                 </div>
-                                <div th:unless="${galleryType.path != null && !galleryType.path.isEmpty()}" class="alert alert-warning">No cover image currently set.</div>
+                                <div th:unless="${galleryType.path != null && !galleryType.path.isEmpty()}" class="alert alert-warning" th:text="#{editcovererror}">No cover image currently set.</div>
                             </div>
 
                             <div class="mb-4">
-                                <label for="newCoverImageFile" class="form-label">Upload New Cover Image (Optional)</label>
+                                <label for="newCoverImageFile" class="form-label" th:text="#{editcover}">Upload New Cover Image (Optional)</label>
                                 <input type="file" class="form-control" id="newCoverImageFile" name="newCoverImageFile" accept="image/*">
-                                <div class="form-text">Select a new image if you want to replace the current cover.</div>
+                                <div class="form-text" th:text="#{selectedit}">Select a new image if you want to replace the current cover.</div>
                             </div>
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary action-button">
-                                    <i class="fas fa-save me-2"></i>Save Changes
+                                    <i class="fas fa-save me-2"></i><span th:text="#{savecat}"></span>
                                 </button>
                                 <a th:href="@{/gallery}" class="btn btn-secondary action-button">
-                                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                                    <i class="fas fa-arrow-left me-2"></i><span th:text="#{back}"></span>
                                 </a>
                             </div>
                         </form>

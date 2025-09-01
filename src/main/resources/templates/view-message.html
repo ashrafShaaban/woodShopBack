@@ -8,18 +8,18 @@
 <body>
 <th:block th:fragment="content">
     <div class="container py-4">
-        <h1 class="display-4 text-center mb-5 section-heading">Message Details</h1>
+        <h1 class="display-4 text-center mb-5 section-heading" th:text="#{messageDetails}">Message Details</h1>
 
         <div class="card shadow-sm message-detail-card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 text-primary" th:text="${message.subject}">Message Subject</h5>
                 <div>
                     <a th:href="@{/contacts}" class="btn btn-outline-secondary btn-sm me-2">
-                        <i class="fas fa-arrow-left me-1"></i> Back to Messages
+                        <i class="fas fa-arrow-left me-1"></i> <span th:text="#{backtomessage}"> Back to Messages</span>
                     </a>
                     <form th:action="@{/contacts/delete/__${message.id}__}" method="post" class="d-inline">
                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this message?');">
-                            <i class="fas fa-trash-alt me-1"></i> Delete Message
+                            <i class="fas fa-trash-alt me-1"></i> <span th:text="#{deletem}">Delete Message</span>
                         </button>
                     </form>
                 </div>
@@ -42,13 +42,13 @@
                             <strong>Read At:</strong> <span th:text="${#temporals.format(message.readAt, 'dd-MM-yyyy HH:mm')}"></span>
                         </th:block>
                         <th:block th:unless="${message.isRead()}">
-                            <strong>Status:</strong> <span class="badge bg-warning text-dark">Unread</span>
+                            <strong>Status:</strong> <span class="badge bg-warning text-dark" th:text="#{unread}">Unread</span>
                         </th:block>
                     </div>
                 </div>
                 <hr/>
                 <div class="message-body mt-4">
-                    <p th:text="${message.message}">This is the full message content from the user.</p>
+                    <p th:text="${message.message}" th:text="#{allmessagecontent}">This is the full message content from the user.</p>
                 </div>
             </div>
         </div>

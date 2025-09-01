@@ -20,6 +20,7 @@ import tmd.tmdAdmin.utils.ModelAttributes;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -58,20 +59,21 @@ public class CategoryController {
         return "add-category-form";
     }
     @PostMapping("")
-    public String addGalleryType(@Valid @ModelAttribute Category category,
-                                 BindingResult bindingResult,
+    public String addGalleryType(@Valid @ModelAttribute("category") Category category,
+                                   BindingResult bindingResult,
 
-                                 @RequestParam("albumProducts") MultipartFile[] albumProducts,
-                                 RedirectAttributes redirectAttributes,
-                                 Model model,
-                                 HttpServletRequest request) {
+                                   @RequestParam("albumProducts") MultipartFile[] albumProducts,
+                                   RedirectAttributes redirectAttributes,
+                                   Model model,
+                                   HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("category",category);
             model.addAttribute("currentUri", request.getRequestURI()); // Keep currentUri for layout
             model.addAttribute("pageTitle", "Create New Album | El Dahman");
             return "add-category-form"; // Return to the form with errors
         }
-        if (category.getId() == 0 && categoryRepository.findById(category.getId()).isPresent()) { // Only check for new albums
+        if (category.getId() == 0 && categoryRepository.findByName(category.getName()).isPresent()) { // Only check for new albums
             bindingResult.rejectValue("name", "name.duplicate", "Category with this name already exists.");
             model.addAttribute("currentUri", request.getRequestURI());
             model.addAttribute("pageTitle", "Create New Category | El Dahman");
@@ -84,7 +86,7 @@ public class CategoryController {
 //        } else if (!fileStorageService.isImageFile(coverImageFile)) {
 //            fileErrorMessage = "Cover image must be a valid image file (JPEG, PNG, GIF, BMP, WEBP).";
 //        } else
-            if (albumProducts == null || albumProducts.length == 0 || albumProducts[0].isEmpty()) {
+        if (albumProducts == null || albumProducts.length == 0 || albumProducts[0].isEmpty()) {
             fileErrorMessage = "Please upload at least one image for the album content.";
         } else {
             for (MultipartFile file : albumProducts) {
@@ -107,6 +109,7 @@ public class CategoryController {
 //            galleryType.setPath(coverImagePath); // Set the path directly to GalleryType.path
             List<Dimension> savedDims = new ArrayList<>();
             for (Dimension dim : category.getDimensions()) {
+                dim.setId(null);
                 Dimension saved = dimensionRepository.save(dim);
                 savedDims.add(saved);
             }
@@ -161,9 +164,15 @@ public class CategoryController {
             Category existingCategory = categoryRepository.findById(category.getId())
                     .orElseThrow(() -> new RuntimeException("Category  not found with ID: " + category.getId()));
 
-            return "edit-gallery-form";
+            return "edit-category-form";
         }
-
+        Optional<Category> existingByName = categoryRepository.findByName(category.getName());
+        if (existingByName.isPresent() && existingByName.get().getId() !=category.getId()) {
+            bindingResult.rejectValue("name", "name.duplicate", "Category with this name already exists.");
+            model.addAttribute("currentUri", request.getRequestURI());
+            model.addAttribute("pageTitle", "Edit Category | El Dahman");
+            return "edit-category-form";
+        }
         String fileErrorMessage = null;
 
 
@@ -324,7 +333,7 @@ public class CategoryController {
             redirectAttributes.addFlashAttribute("errorMessage", "An error occurred during Product deletion: " + e.getMessage());
             e.printStackTrace();
         }
-        return "redirect:/view-category/" + categoryId;
+        return "redirect:/category?categoryId=" + categoryId;
     }
 
 }

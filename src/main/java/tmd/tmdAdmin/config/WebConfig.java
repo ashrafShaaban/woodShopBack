@@ -1,6 +1,7 @@
 package tmd.tmdAdmin.config;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.descriptor.LocalResolver;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,14 +13,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import tmd.tmdAdmin.data.repositories.UserRepository;
 import tmd.tmdAdmin.security.LoginSuccessHandler;
 import tmd.tmdAdmin.services.UserDetailsServiceImp;
 import tmd.tmdAdmin.storage.FileStorageProperties;
 
 import javax.sql.DataSource;
+import java.util.Locale;
 
 @Configuration
 @RequiredArgsConstructor
@@ -49,6 +55,24 @@ public class WebConfig implements WebMvcConfigurer {
         return auth;
     }
 
+    @Bean
+    public LocaleResolver localeResolver(){
+        SessionLocaleResolver slr=new SessionLocaleResolver();
+      slr.setDefaultLocale(Locale.US);
+      return slr;
+    }
+
+    @Bean
+    public LocaleChangeInterceptor localeChangeInterceptor(){
+     LocaleChangeInterceptor localeChangeInterceptor=new LocaleChangeInterceptor();
+     localeChangeInterceptor.setParamName("lang");
+     return  localeChangeInterceptor;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(localeChangeInterceptor()); // 👈 لازم دي
+    }
     // New Bean for Remember Me Token Repository
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
@@ -117,4 +141,5 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/");
         registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
     }
+
 }

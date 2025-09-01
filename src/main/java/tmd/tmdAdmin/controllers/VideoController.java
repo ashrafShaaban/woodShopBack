@@ -32,6 +32,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -51,12 +52,24 @@ public class VideoController {
         return "add-videoGallery-form";
     }
         @PostMapping("/saveVideoType")
-        public String addGalleryType(@ModelAttribute VideosType videosType, // Bind album properties (name, nameAr, nameRu)
+        public String addGalleryType(@Valid @ModelAttribute("videoType") VideosType videoType,BindingResult bindingResult, // Bind album properties (name, nameAr, nameRu)
                                      @RequestParam("coverVideoFile") MultipartFile coverVideoFile, // Album cover image file
                                      @RequestParam("albumVideoFiles") MultipartFile[] albumVideoFiles, // Album content image files
-                                     RedirectAttributes redirectAttributes) {
+                                     RedirectAttributes redirectAttributes,Model model,HttpServletRequest request) {
+            if (bindingResult.hasErrors()) {
+                model.addAttribute("currentUri", request.getRequestURI()); // Keep currentUri for layout
+                model.addAttribute("pageTitle", "Create New Album | El Dahman");
+                model.addAttribute("videoType",videoType);
+                return "add-videoGallery-form"; // Return to the form with errors
+            }
+            if (videoType.getId() == 0 && videoTypeRepository.findByName(videoType.getName()).isPresent()) { // Only check for new albums
+                bindingResult.rejectValue("name", "name.duplicate", "Album with this name already exists.");
+                model.addAttribute("currentUri", request.getRequestURI());
+                model.addAttribute("pageTitle", "Create New Album | El Dahman");
+                return "add-videoGallery-form";
+            }
             try {
-                if (videoTypeRepository.findByName(videosType.getName()).isPresent()) {
+                if (videoTypeRepository.findByName(videoType.getName()).isPresent()) {
                     redirectAttributes.addFlashAttribute("errorMessage", "Gallery album with this name already exists.");
                     return "redirect:/addVideotype";
                 }
@@ -69,10 +82,10 @@ public class VideoController {
                     return "redirect:/addVideotype";
                 }
                 String coverVideoPath = fileStorageService.storeGalleryTypeCover(coverVideoFile);
-                videosType.setPath(coverVideoPath); // Set the path directly to GalleryType.path
+                videoType.setPath(coverVideoPath); // Set the path directly to GalleryType.path
 
 
-                VideosType savedGalleryType = videoTypeRepository.save(videosType); // galleryType.id will be set after save
+                VideosType savedGalleryType = videoTypeRepository.save(videoType); // galleryType.id will be set after save
 
                 // 3. Handle Album Content Image Uploads
                 for (MultipartFile file : albumVideoFiles) {
@@ -123,13 +136,24 @@ public class VideoController {
     @PostMapping("/updatevideoType")
     public String saveUpdate(
             @Valid @ModelAttribute("updatedItem") VideosType itemGallery,
-            BindingResult bindingResult,
+            BindingResult bindingResult,Model model,
             @RequestParam(value = "newCoverImageFile", required = false) MultipartFile newCoverImageFile,
             @RequestParam(value = "oldimageURL", required = false) String oldURL,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes
+             ,HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
-            return "edit-gallery-form"; // back to form with validation errors
+            model.addAttribute("currentUri", request.getRequestURI()); // Keep currentUri for layout
+            model.addAttribute("pageTitle", "Create New Album | El Dahman");
+            model.addAttribute("updatedItem",itemGallery);
+            return "edit-video-form"; // back to form with validation errors
+        }
+        Optional<VideosType> existingByName = videoTypeRepository.findByName(itemGallery.getName());
+        if (existingByName.isPresent() && existingByName.get().getId() !=itemGallery.getId()) {
+            bindingResult.rejectValue("name", "name.duplicate", "Gallery with this name already exists.");
+            model.addAttribute("currentUri", request.getRequestURI());
+            model.addAttribute("pageTitle", "Edit Gallery | El Dahman");
+            return "edit-video-form";
         }
 
         try {

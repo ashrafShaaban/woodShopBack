@@ -8,7 +8,7 @@
 <body>
 <th:block th:fragment="content">
     <div class="container py-4">
-        <h1 class="display-4 text-center mb-5 section-heading" th:text="'Add Images to ' + ${galleryType.name}">Add Images to Album</h1>
+        <h1 class="display-4 text-center mb-5 section-heading" th:text="#{addgallerytoalbum}">Add Images to Album</h1>
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
                 <div class="card shadow-sm">
@@ -26,16 +26,16 @@
                         <form th:action="@{/gallery/images/add/__${galleryType.id}__}" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="galleryTypeId" th:value="${galleryType.id}" />
                             <div class="mb-4">
-                                <label for="newAlbumImageFiles" class="form-label">Upload Additional Images (Select Multiple)</label>
+                                <label for="newAlbumImageFiles" class="form-label" th:text="#{additionalproducts}">Upload Additional Images (Select Multiple)</label>
                                 <input type="file" class="form-control" id="newAlbumImageFiles" name="newAlbumImageFiles" multiple accept="image/*" required>
-                                <div class="form-text">Select one or more image files to add to this album.</div>
+                                <div class="form-text" th:text="#{selectmoreproducts}">Select one or more image files to add to this album.</div>
                             </div>
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary action-button">
-                                    <i class="fas fa-plus-circle me-2"></i>Add Images
+                                    <i class="fas fa-plus-circle me-2"></i><span th:text="#{addimage}"></span>
                                 </button>
                                 <a th:href="@{/gallery(galleryTypeId=${galleryType.id})}" class="btn btn-secondary action-button">
-                                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                                    <i class="fas fa-arrow-left me-2"></i><span th:text="#{back}">Cancel</span>
                                 </a>
                             </div>
                         </form>

@@ -31,3 +31,37 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+let dimensionIndex = 1; // start after first row
+
+    document.getElementById('add-dimension-btn').addEventListener('click', function() {
+        // Get the first dimension row as template
+        const templateRow = document.querySelector('.dimension-row');
+        const clone = templateRow.cloneNode(true);
+
+        // Update IDs and th:fields for the new row
+        clone.querySelectorAll('input').forEach(input => {
+            // Update name attribute
+            const oldName = input.getAttribute('name');
+            if (oldName) {
+                input.setAttribute('name', oldName.replace(/\[\d+\]/, `[${dimensionIndex}]`));
+            }
+
+            // Optional: update th:field if needed
+            const oldField = input.getAttribute('th:field');
+            if (oldField) {
+                input.setAttribute('th:field', oldField.replace(/\[\d+\]/, `[${dimensionIndex}]`));
+            }
+
+            // Update ID
+            const oldId = input.id;
+            input.id = oldId.replace(/\d+$/, dimensionIndex);
+
+            // Clear value
+            input.value = '';
+        });
+        // Append the new row
+        templateRow.parentNode.insertBefore(clone, this); // insert before the button
+
+        dimensionIndex++;
+    });

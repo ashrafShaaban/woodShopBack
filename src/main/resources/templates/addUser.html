@@ -44,31 +44,31 @@
                     </div>
 
 
-                    <h1 class="text-center headform">Add/Update User</h1>
-                    <form th:action="${isEdit} ? @{/saveuserUpdate} :@{/saveUser}" th:object="${newUser}" method="post" enctype="multipart/form-data">
+                    <h1 class="text-center headform" th:text="#{addedituser}">Add/Update User</h1>
+                    <form th:action="${isEdit} ? @{/users/saveuserUpdate} :@{/users/saveUser}" th:object="${newUser}" method="post" enctype="multipart/form-data">
                         <input type="hidden" th:field="*{id}">
 
                         <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
+                            <label for="username" class="form-label" th:text="#{adduser}">Username</label>
                             <input type="text" class="form-control" id="username" th:field="*{username}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
+                            <label for="password" class="form-label" th:text="#{addpassword}">Password</label>
                             <input type="text" class="form-control" id="password" th:field="*{password}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="role" class="form-label">Role</label>
+                            <label for="role" class="form-label" th:text="#{addrole}">Role</label>
                             <input type="text" class="form-control" id="role" th:field="*{role}" required>
                         </div>
-                        <input type="checkbox" th:field="*{active}" /> Active
+                        <input type="checkbox" th:field="*{active}" th:text="#{useractive}"/>
                         <!-- Input for Cover Image -->
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary action-button">
-                                <i class="fas fa-plus-circle me-2"></i>Create/Update User
+                                <i class="fas fa-plus-circle me-2"></i><span th:text="#{createupdateuser}">Create/Update User</span>
                             </button>
                             <a th:href="@{/seeUsers}" class="btn btn-secondary action-button">
-                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                                <i class="fas fa-arrow-left me-2"></i><span  th:text="#{back}">Cancel</span>
                             </a>
                         </div>
                     </form>
