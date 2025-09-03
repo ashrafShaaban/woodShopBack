@@ -25,42 +25,42 @@
                         </div>
 
                         <!-- IMPORTANT: enctype="multipart/form-data" is crucial for file uploads -->
-                        <form th:action="@{/saveVideoType}" th:object="${videoType}" method="post" enctype="multipart/form-data">
+                        <form th:action="@{/video}" th:object="${videoType}" method="post" enctype="multipart/form-data">
                             <div class="mb-3">
-                                <label for="videoName" class="form-label">Album Name (English)</label>
+                                <label for="videoName" class="form-label" th:text="#{galnameEn}">Album Name (English)</label>
                                 <input type="text" class="form-control" id="videoName" th:field="*{name}"
                                        th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''" required>
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}" ></div>
                             </div>
                             <div class="mb-3">
-                                <label for="videoNameAr" class="form-label">Album Name (Arabic)</label>
+                                <label for="videoNameAr" class="form-label" th:text="#{galnameAr}">Album Name (Arabic)</label>
                                 <input type="text" class="form-control" id="videoNameAr" th:field="*{nameAr}"
                                        th:classappend="${#fields.hasErrors('nameAr')} ? 'is-invalid' : ''" required>
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('nameAr')}" th:errors="*{nameAr}" ></div>
                             </div>
                             <div class="mb-3">
-                                <label for="videoNameRu" class="form-label">Album Name (Russian)</label>
+                                <label for="videoNameRu" class="form-label " th:text="#{galnameRu}">Album Name (Russian)</label>
                                 <input type="text" class="form-control" id="videoNameRu" th:field="*{nameRu}"
                                        th:classappend="${#fields.hasErrors('nameRu')} ? 'is-invalid' : ''"  required>
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('nameRu')}" th:errors="*{nameRu}" ></div>
                             </div>
                             <!-- Input for Cover Image -->
                             <div class="mb-3">
-                                <label for="coverVideoFile" class="form-label">Upload Album Cover Image</label>
+                                <label for="coverVideoFile" class="form-label" th:text="#{cover}">Upload Album Cover Image</label>
                                 <input type="file" class="form-control" id="coverVideoFile" name="coverVideoFile" accept="image/*" required>
                                 <div class="form-text">This will be the main image displayed for your album.</div>
                             </div>
                             <!-- Input for Multiple Album Images -->
                             <div class="mb-4">
-                                <label for="albumVideoFiles" class="form-label">Upload Album Content Videos (Select Multiple)</label>
+                                <label for="albumVideoFiles" class="form-label" th:text="#{uploadvideos}">Upload Album Content Videos (Select Multiple)</label>
                                 <input type="file" class="form-control" id="albumVideoFiles" name="albumVideoFiles" multiple accept="video/*" required>
-                                <div class="form-text">Select one or more video files (e.g., Mp4) to be part of this album.</div>
+                                <div class="form-text" th:text="#{selectvideos}">Select one or more video files (e.g., Mp4) to be part of this album.</div>
                             </div>
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary action-button">
                                     <i class="fas fa-plus-circle me-2"></i><span th:text="#{categcreate}"></span>
                                 </button>
-                                <a th:href="@{/seeVideos}" class="btn btn-secondary action-button">
+                                <a th:href="@{/video}" class="btn btn-secondary action-button">
                                     <i class="fas fa-arrow-left me-2"></i><span th:text="#{back}"></span>
                                 </a>
                             </div>

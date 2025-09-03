@@ -54,7 +54,7 @@
                         class="fa-solid fa-photo-film me-2"></i><span th:text="#{nav.gallery}"></span></a>
             </li>
             <li th:classappend="${currentUri == '/seeVideos' ? 'active' : ''}">
-                <a th:href="@{/seeVideos}" class="nav-link"><i
+                <a th:href="@{/video}" class="nav-link"><i
                         class="fa-solid fa-video me-2"></i><span th:text="#{nav.videos}"></span></a>
             </li>
             <li th:classappend="${currentUri == '/contacts' ? 'active' : ''}">
@@ -68,7 +68,7 @@
             </li>
             <li
                     th:classappend="${currentUri == '/seeUsers' ? 'active' : ''}">
-                <a th:href="@{/seeUsers}" class="nav-link"><i class="fa-solid fa-users me-2"></i><span th:text="#{nav.users}"></span></a>
+                <a th:href="@{/users}" class="nav-link"><i class="fa-solid fa-users me-2"></i><span th:text="#{nav.users}"></span></a>
             </li>
         </ul>
     </nav>

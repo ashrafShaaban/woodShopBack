@@ -23,7 +23,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
-                        <form th:action="@{/addVideosToAlbum/__${videoType.id}__}" method="post" enctype="multipart/form-data">
+                        <form th:action="@{/video/videos/add/__${videoType.id}__}" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="videoTypeId" th:value="${videoType.id}" />
                             <div class="mb-4">
                                 <label for="newAlbumVideoFiles" class="form-label" th:text="#{additonalvideos}">Upload Additional Videos (Select Multiple)</label>
@@ -34,7 +34,7 @@
                                 <button type="submit" class="btn btn-primary action-button">
                                     <i class="fas fa-plus-circle me-2"></i><span th:text="#{addvideo}"></span>
                                 </button>
-                                <a th:href="@{/viewVideos/__${videoType.id}__}" class="btn btn-secondary action-button">
+                                <a th:href="@{/video/viewVideos/__${videoType.id}__}" class="btn btn-secondary action-button">
                                     <i class="fas fa-arrow-left me-2"></i><span th:text="#{back}">Cancel</span>
                                 </a>
                             </div>

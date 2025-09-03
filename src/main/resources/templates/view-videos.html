@@ -22,10 +22,10 @@
         </div>
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <a th:href="@{/seeVideos}" class="btn btn-outline-secondary">
+            <a th:href="@{/video}" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left me-2"></i> <span th:text="#{back}"></span>
             </a>
-            <a th:href="@{/addVideosToAlbum/__${videoType.id}__}" class="btn btn-primary action-button">
+            <a th:href="@{/video/videos/add/form/__${videoType.id}__}" class="btn btn-primary action-button">
                 <i class="fas fa-plus me-2"></i>  <span th:text="#{addvideos}"></span>
             </a>
         </div>
@@ -39,7 +39,7 @@
                             th:text="${video.name}">Video Name</h6>
                         <div class="d-flex justify-content-center mt-2">
                             <!-- Delete individual video form -->
-                            <form method="post" th:action="@{/deleteVideo}">
+                            <form method="post" th:action="@{/video/deleteVideo}">
                                 <input type="hidden" name="videoId" th:value="${video.id}">
                                 <input type="hidden" name="videoTypeId" th:value="${videoType.id}">
                                 <button type="submit" class="btn btn-danger btn-sm action-button"

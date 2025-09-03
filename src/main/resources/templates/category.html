@@ -52,25 +52,25 @@
                             Category Description
                         </h6>
 
-                        <!-- Material -->
-                        <p class="text-center text-muted"
-                           th:text="${category.material}">
-                            Category Material
-                        </p>
+<!--                        &lt;!&ndash; Material &ndash;&gt;-->
+<!--                        <p class="text-center text-muted"-->
+<!--                           th:text="${category.material}">-->
+<!--                            Category Material-->
+<!--                        </p>-->
 
-                        <!-- Dimensions (if available) -->
+<!--                        &lt;!&ndash; Dimensions (if available) &ndash;&gt;-->
 
-                            <p class="text-center mb-1"><strong th:text="#{category.dimensions}">Dimensions:</strong></p>
-                            <ul class="list-unstyled text-center mb-2">
-                                <li th:each="dimension, stat : ${category.dimensions}">
-                                    <strong th:text="${stat.index + 1} + '.'"></strong>
-                                    <span th:text="${dimension.width}"></span> ×
-                                    <span th:text="${dimension.height}"></span>
-                                    <span th:if="${dimension.depth != null and dimension.depth > 0}">
-                                        × <span th:text="${dimension.depth}"></span>
-                                            </span>
-                                    <span th:text="${dimension.unit}"></span>
-                            </ul>
+<!--                            <p class="text-center mb-1"><strong th:text="#{category.dimensions}">Dimensions:</strong></p>-->
+<!--                            <ul class="list-unstyled text-center mb-2">-->
+<!--                                <li th:each="dimension, stat : ${category.dimensions}">-->
+<!--                                    <strong th:text="${stat.index + 1} + '.'"></strong>-->
+<!--                                    <span th:text="${dimension.width}"></span> ×-->
+<!--                                    <span th:text="${dimension.height}"></span>-->
+<!--                                    <span th:if="${dimension.depth != null and dimension.depth > 0}">-->
+<!--                                        × <span th:text="${dimension.depth}"></span>-->
+<!--                                            </span>-->
+<!--                                    <span th:text="${dimension.unit}"></span>-->
+<!--                            </ul>-->
 
 
                         <span th:text="#{actions}">Actions</span>

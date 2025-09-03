@@ -19,8 +19,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DashboardController {
 
-    private final SliderSideRepository sliderSideRepository;
-    private final CategoryRepository categoryRepository;
+
+    private final CategoryRepository productsRepository;
     private final ContactService contactService;
     private final ContactRepository contactRepository;
     private final GalleryRepository galleryRepository;
@@ -65,71 +65,5 @@ public class DashboardController {
 
         return data;
     }
-
-    @GetMapping("/seeSlider")
-    public String slider(Model model, Principal principal) {
-        List<SliderSlide> sliderSlides = sliderSideRepository.findAll();
-        model.addAttribute("sliders", sliderSlides);
-        if (principal != null) {
-            model.addAttribute("username", principal.getName());
-        }
-        return "slider";
-    }
-
-    @GetMapping("/seeCategories")
-    public String category(Model model, Principal principal,HttpServletRequest request) {
-        List<Category> categories = categoryRepository.findAll();
-        model.addAttribute("categories", categories);
-        if (principal != null) {
-            model.addAttribute("username", principal.getName());
-        }
-        model.addAttribute("currentUri", request.getRequestURI());
-
-        model.addAttribute("pageSpecificCss", new String[]{"/css/gallery.css"});
-        return "categories";
-    }
-
-
-
-    @GetMapping("/seemessages")
-    public String seemessages(Model model, Principal principal,HttpServletRequest request) {
-        List<Contact> contacts = contactRepository.findAll();
-        model.addAttribute("messages", contacts);
-        if (principal != null) {
-            model.addAttribute("username", principal.getName());
-        }
-        model.addAttribute("currentUri", request.getRequestURI());
-        model.addAttribute("pageTitle", "Videos | El Dahman");
-        model.addAttribute("pageSpecificCss", new String[]{"/css/gallery.css"});
-        return "contact-messages";
-    }
-
-    @GetMapping("/seeVideos")
-    public String seeVideos(Model model, Principal principal,HttpServletRequest request) {
-        List<VideosType> videos = videoTypeRepository.findAll();
-        model.addAttribute("videos", videos);
-        if (principal != null) {
-            model.addAttribute("username", principal.getName());
-        }
-        model.addAttribute("currentUri", request.getRequestURI());
-
-        model.addAttribute("pageSpecificCss", new String[]{"/css/gallery.css"});
-
-        return "videos";
-    }
-
-    @GetMapping("/seeUsers")
-    public String seeUsers(Model model, Principal principal,HttpServletRequest request) {
-        if (principal != null) {
-            model.addAttribute("username", principal.getName());
-        }
-        model.addAttribute("currentUri", request.getRequestURI());
-        model.addAttribute("pageTitle", "Users | El Dahman");
-        List<User> users = userRepository.findAll();
-
-        model.addAttribute("users", users);
-        return "users";
-    }
-
 
 }

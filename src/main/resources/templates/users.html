@@ -26,7 +26,7 @@
   </div>
 
   <div class="d-flex justify-content-end mb-4">
-    <a th:href="@{/users/addUser}" class="btn btn-secondary px-4 py-2 add-new-button" sec:authorize="hasRole('SUPERADMIN')">
+    <a th:href="@{/users/add/form}" class="btn btn-secondary px-4 py-2 add-new-button" sec:authorize="hasRole('SUPERADMIN')">
       <i class="fas fa-plus-circle me-2"></i><span th:text="#{createuser}"> </span>
     </a>
   </div>
@@ -49,13 +49,13 @@
       <td  th:text="${user.password}" sec:authorize="hasRole('SUPERADMIN')"></td>
       <td  sec:authorize="hasRole('SUPERADMIN')">
         <div class="btns d-flex gap-2" >
-          <form method="post" th:action="@{/users/updateUser(userId=${user.id})}">
+          <form method="post" th:action="@{/users/update/form(userId=${user.id})}">
             <input type="hidden" th:value="${user.id}">
             <button type="submit" class="btn btn-info btn-sm" th:text="#{edit}" >edit</button>
           </form>
-          <form method="post" th:action="@{/users/deleteUser(userId=${user.id})}">
+          <form method="post" th:action="@{/users/delete(userId=${user.id})}">
             <input type="hidden" th:value="${user.id}">
-            <button type="submit" class="btn btn-danger btn-sm" th:text="#{delete}">delete</button>
+            <button type="submit" class="btn btn-danger btn-sm" th:text="#{delete}" onclick="return confirm('Are you sure you want to delete that user');">delete</button>
           </form>
         </div>
       </td>

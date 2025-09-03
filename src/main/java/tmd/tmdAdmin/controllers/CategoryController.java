@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tmd.tmdAdmin.data.entities.*;
 import tmd.tmdAdmin.data.repositories.CategoryRepository;
 import tmd.tmdAdmin.data.repositories.DimensionRepository;
-import tmd.tmdAdmin.data.repositories.ProductRepository;
+import tmd.tmdAdmin.data.repositories.ProductsRepository;
 import tmd.tmdAdmin.storage.FileStorageService;
 import tmd.tmdAdmin.utils.ModelAttributes;
 
@@ -29,14 +29,14 @@ import java.util.Optional;
 public class CategoryController {
 
     private final CategoryRepository categoryRepository;
-    private final ProductRepository productRepository;
+    private final ProductsRepository productsRepository;
     private final FileStorageService fileStorageService;
     private final ModelAttributes modelAttributes;
     private final DimensionRepository dimensionRepository;
     @GetMapping({"", "/"})
     public String category(@RequestParam(value = "categoryId", required = false) Integer categoryId,
-                          Model model,
-                          HttpServletRequest request) {
+                           Model model,
+                           HttpServletRequest request) {
         if (categoryId != null) {
             Category category = categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new RuntimeException("Category album not found with ID: " + categoryId));
@@ -60,12 +60,12 @@ public class CategoryController {
     }
     @PostMapping("")
     public String addGalleryType(@Valid @ModelAttribute("category") Category category,
-                                   BindingResult bindingResult,
+                                 BindingResult bindingResult,
 
-                                   @RequestParam("albumProducts") MultipartFile[] albumProducts,
-                                   RedirectAttributes redirectAttributes,
-                                   Model model,
-                                   HttpServletRequest request) {
+                                 @RequestParam("albumProducts") MultipartFile[] albumProducts,
+                                 RedirectAttributes redirectAttributes,
+                                 Model model,
+                                 HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("category",category);
@@ -124,7 +124,7 @@ public class CategoryController {
                     // This creates a 'Gallery' entity (which represents an image)
                     // We can pass original filename as caption for Gallery.name
                     Products product = fileStorageService.storeProductsforCategory(file, savedCategory, file.getOriginalFilename());
-                    productRepository.save(product); // Save the image entity
+                    productsRepository.save(product); // Save the image entity
                     savedCategory.addProduct(product); // Add image to album's list
                 }
             }
@@ -206,14 +206,6 @@ public class CategoryController {
             }
             existingCategory.setDimensions(savedDims);
 
-//            if (newCoverImageFile != null && !newCoverImageFile.isEmpty()) {
-//                if (existingGalleryType.getPath() != null && !existingGalleryType.getPath().isEmpty()) {
-//                    fileStorageService.deleteFile(existingGalleryType.getPath());
-//                }
-//                String newCoverImagePath = fileStorageService.storeGalleryTypeCover(newCoverImageFile);
-//                existingGalleryType.setPath(newCoverImagePath);
-//            }
-
             categoryRepository.save(existingCategory);
 
             redirectAttributes.addFlashAttribute("successMessage", "Category '" + existingCategory.getName() + "' updated successfully!");
@@ -291,7 +283,7 @@ public class CategoryController {
                 for (MultipartFile file : newProductsImages) {
                     if (!file.isEmpty()) {
                         Products albumProduct = fileStorageService.storeProductsforCategory(file, existingCategory, file.getOriginalFilename());
-                        productRepository.save(albumProduct);
+                        productsRepository.save(albumProduct);
                         existingCategory.addProduct(albumProduct);
                     }
                 }
@@ -313,7 +305,7 @@ public class CategoryController {
                               @RequestParam("categoryId") Integer categoryId,
                               RedirectAttributes redirectAttributes) {
         try {
-            Products productToDelete = productRepository.findById(productId)
+            Products productToDelete = productsRepository.findById(productId)
                     .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
 
             Category category = categoryRepository.findById(categoryId)
@@ -323,7 +315,7 @@ public class CategoryController {
             category.getProducts().remove(productToDelete);
             // Delete file from disk using the path stored in Gallery.path
             fileStorageService.deleteFile(productToDelete.getPath());
-            productRepository.delete(productToDelete);
+            productsRepository.delete(productToDelete);
             categoryRepository.save(category);
             redirectAttributes.addFlashAttribute("successMessage", "Product deleted successfully!");
         } catch (IOException e) {

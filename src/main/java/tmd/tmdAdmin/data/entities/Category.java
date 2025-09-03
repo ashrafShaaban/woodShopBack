@@ -4,13 +4,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 
 @Entity
@@ -53,7 +50,7 @@ public class Category {
 
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
-            name = "categories_dimensions",
+            name = "category_dimensions",
             joinColumns = @JoinColumn(name = "category_id"),
             inverseJoinColumns =@JoinColumn(name = "dimensions_id")
     )

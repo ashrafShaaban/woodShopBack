@@ -23,7 +23,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
-                        <form th:action="@{/updatevideoType}" th:object="${updatedItem}" method="post" enctype="multipart/form-data">
+                        <form th:action="@{/video/update}" th:object="${updatedItem}" method="post" enctype="multipart/form-data">
                             <input type="hidden" th:field="*{id}" />
                             <input type="hidden" name="oldimageURL" th:value="${updatedItem.path}" />
                             <div class="mb-3">
@@ -64,7 +64,7 @@
                                 <button type="submit" class="btn btn-primary action-button">
                                     <i class="fas fa-save me-2"></i><span th:text="#{savecat}"></span>
                                 </button>
-                                <a th:href="@{/seeVideos}" class="btn btn-secondary action-button">
+                                <a th:href="@{/video}" class="btn btn-secondary action-button">
                                     <i class="fas fa-arrow-left me-2"></i><span th:text="#{back}"></span>
                                 </a>
                             </div>

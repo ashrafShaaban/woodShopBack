@@ -10,7 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import tmd.tmdAdmin.data.entities.Category;
 import tmd.tmdAdmin.data.entities.Gallery;
 import tmd.tmdAdmin.data.entities.GalleryType;
 import tmd.tmdAdmin.data.repositories.GalleryRepository;
@@ -171,7 +170,8 @@ public class GalleryController {
             for (Gallery image : galleryTypeToDelete.getImages()) {
                 fileStorageService.deleteFile(image.getPath());
             }
-
+           List<Gallery> galleries=galleryRepository.findAllByGalleryType_Id(galleryTypeId);
+            galleryRepository.deleteAll(galleries);
             galleryTypeRepository.delete(galleryTypeToDelete);
 
             redirectAttributes.addFlashAttribute("successMessage", "Gallery album '" + galleryTypeToDelete.getName() + "' and all its images deleted successfully!");

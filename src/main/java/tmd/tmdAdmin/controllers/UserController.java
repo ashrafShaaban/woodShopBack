@@ -1,5 +1,7 @@
 package tmd.tmdAdmin.controllers;
 
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,10 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tmd.tmdAdmin.data.dto.UserDTO;
+import tmd.tmdAdmin.data.entities.GalleryType;
 import tmd.tmdAdmin.data.entities.User;
 import tmd.tmdAdmin.data.repositories.UserRepository;
+import tmd.tmdAdmin.utils.ModelAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,12 +27,23 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
-
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final ModelAttributes modelAttributes;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @GetMapping({"", "/"})
+    public String users(
+                          Model model,
+                          HttpServletRequest request) {
+
+        List<User> users = userRepository.findAll();
+        model.addAttribute("users", users);
+        modelAttributes.setModelAttributes(model, request, "Users | El Dahman", new String[]{"/css/gallery.css"});
+        return "users";
+    }
+
 
     @InitBinder
     public void initBinder(WebDataBinder dataBinder){
@@ -38,17 +53,17 @@ public class UserController {
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
 
-    @GetMapping("/addUser")
+    @GetMapping("/add/form")
     public String adduser(Model model){
       model.addAttribute("newUser",new UserDTO());
       model.addAttribute("isEdit",false);
-      return "addUser";
+      return "add-user-form";
     }
-    @PostMapping("saveUser")
+    @PostMapping("")
     public String saveUser(@Valid @ModelAttribute("newUser") UserDTO newUser, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
        if(bindingResult.hasErrors()){
            model.addAttribute("isEdit", false);
-           return "addUser";
+           return "add-user-form";
        }
 
         try{
@@ -60,7 +75,7 @@ public class UserController {
            user.setActive(true);
 //           user.setRoles(roles);
            userRepository.save(user);
-           return "redirect:/seeUsers";
+           return "redirect:/users";
        }
        catch (DataIntegrityViolationException e) {
 
@@ -69,7 +84,7 @@ public class UserController {
            return "addUser";
        }
     }
-    @PostMapping("/updateUser")
+    @PostMapping("/update/form")
     public String updateUser(@RequestParam("userId") int id,Model model){
         User updatedUser=userRepository.findById(id).orElseThrow();
         UserDTO updateduserDto=new UserDTO();
@@ -77,21 +92,15 @@ public class UserController {
         updateduserDto.setUsername(updatedUser.getUsername());
         updateduserDto.setPassword(updatedUser.getPassword());
         updateduserDto.setActive(updatedUser.getActive());
-//        updateduserDto.setRolesIds(
-//                updatedUser.getRoles() == null
-//                        ? new ArrayList<>()
-//                        : updatedUser.getRoles().stream()
-//                        .map(Role::getId)
-//                        .collect(Collectors.toList())
-//        );
+
         model.addAttribute("newUser",updateduserDto);
         model.addAttribute("isEdit",true);
-        return "addUser";
+        return "edit-user-form";
     }
-    @PostMapping("/saveuserUpdate")
+    @PostMapping("/update")
     public String saveUpdate(@Valid  @ModelAttribute("newUser") UserDTO newUser,BindingResult bindingResult, Model model){
         if(bindingResult.hasErrors()){
-            return "addUser";
+            return "edit-user-form";
         }
         try{
             User updateduser=userRepository.findById(newUser.getId()).orElseThrow();
@@ -100,25 +109,25 @@ public class UserController {
             if (newUser.getPassword() != null && !newUser.getPassword().isEmpty()) {
                 updateduser.setPassword(passwordEncoder.encode(newUser.getPassword()));
             }
-            updateduser.setRole(newUser.getRole());
+            updateduser.setRole("ROLE_" + newUser.getRole());
             updateduser.setUpdatedAt(System.currentTimeMillis());
             updateduser.setActive(newUser.getActive());
 //            updateduser.setRoles(roles);
             userRepository.save(updateduser);
-            return "redirect:/seeUsers";
+            return "redirect:/users";
         }
         catch (DataIntegrityViolationException e) {
 
             model.addAttribute("error", "the name must be unique");
             model.addAttribute("isEdit", true);
-            return "addUser";
+            return "edit-user-form";
         }
     }
-    @PostMapping("/deleteUser")
+    @PostMapping("/delete")
     public String deleteUser(@RequestParam("userId") int id)
     {
         User deletedUser=userRepository.findById(id).orElseThrow();
         userRepository.delete(deletedUser);
-        return "redirect:/seeUsers";
+        return "redirect:/users";
     }
 }

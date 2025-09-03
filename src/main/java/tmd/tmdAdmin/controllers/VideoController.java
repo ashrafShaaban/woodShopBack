@@ -3,6 +3,7 @@ package tmd.tmdAdmin.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,6 +25,7 @@ import tmd.tmdAdmin.data.repositories.GalleryTypeRepository;
 import tmd.tmdAdmin.data.repositories.VideoTypeRepository;
 import tmd.tmdAdmin.data.repositories.VideosRepository;
 import tmd.tmdAdmin.storage.FileStorageService;
+import tmd.tmdAdmin.utils.ModelAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,12 +39,35 @@ import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
+@RequestMapping("/video")
 public class VideoController {
     private final VideosRepository videosRepository;
     private final VideoTypeRepository videoTypeRepository;
     private final FileStorageService fileStorageService;
+    private final ModelAttributes modelAttributes;
 
-    @GetMapping("/addVideotype")
+
+    @GetMapping({"", "/"})
+    public String video(@RequestParam(value = "videoTypeId", required = false) Integer videoTypeId,
+                          Model model,
+                          HttpServletRequest request) {
+        if (videoTypeId != null) {
+            VideosType videoType = videoTypeRepository.findById(videoTypeId)
+                    .orElseThrow(() -> new RuntimeException("videoGallery album not found with ID: " + videoTypeId));
+
+            modelAttributes.setModelAttributes(model, request, videoType.getName() + " Videos | El Dahman", new String[]{"/css/gallery.css"});
+            model.addAttribute("videoType", videoType);
+            model.addAttribute("videos", videoType.getVideos()); // Pass individual images to the template
+            model.addAttribute("pageSpecificCss", new String[]{"/css/gallery.css"});
+            return "view-videos";
+        }
+        List<VideosType> videosTypes = videoTypeRepository.findAll();
+        model.addAttribute("videos", videosTypes);
+        modelAttributes.setModelAttributes(model, request, "videoGalleries | El Dahman", new String[]{"/css/gallery.css"});
+        return "videos";
+    }
+    @GetMapping("/add/form")
     public String addVideoForm(Model model, HttpServletRequest request){
         VideosType videoType=new VideosType();
         model.addAttribute("currentUri", request.getRequestURI());
@@ -51,7 +76,7 @@ public class VideoController {
         model.addAttribute("videoType",videoType);
         return "add-videoGallery-form";
     }
-        @PostMapping("/saveVideoType")
+        @PostMapping("")
         public String addGalleryType(@Valid @ModelAttribute("videoType") VideosType videoType,BindingResult bindingResult, // Bind album properties (name, nameAr, nameRu)
                                      @RequestParam("coverVideoFile") MultipartFile coverVideoFile, // Album cover image file
                                      @RequestParam("albumVideoFiles") MultipartFile[] albumVideoFiles, // Album content image files
@@ -100,13 +125,13 @@ public class VideoController {
                 }
                 videoTypeRepository.save(savedGalleryType); // Re-save to ensure image list is updated
 
-                redirectAttributes.addFlashAttribute("successMessage", "Gallery album '" + savedGalleryType.getName() + "' and images added successfully!");
+                redirectAttributes.addFlashAttribute("successMessage", "videoGallery album '" + savedGalleryType.getName() + "' and images added successfully!");
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Failed to upload images: " + e.getMessage());
             } catch (Exception e) {
                 redirectAttributes.addFlashAttribute("errorMessage", "An error occurred: " + e.getMessage());
             }
-            return "redirect:/seeVideos";
+            return "redirect:/video";
 
         }
     @GetMapping("/viewVideos/{videoTypeId}")
@@ -126,14 +151,14 @@ public class VideoController {
 
         return "view-videos";  // New template for viewing images in an album
     }
-    @GetMapping("/updatevideoType")
+    @GetMapping("/update/form")
     public String updateitem(@RequestParam("itemId") int id,Model model){
         System.out.println(id);
         VideosType updateditem=videoTypeRepository.findById(id).orElseThrow();
         model.addAttribute("updatedItem",updateditem);
         return "edit-video-form";
     }
-    @PostMapping("/updatevideoType")
+    @PostMapping("/update")
     public String saveUpdate(
             @Valid @ModelAttribute("updatedItem") VideosType itemGallery,
             BindingResult bindingResult,Model model,
@@ -180,7 +205,7 @@ public class VideoController {
             videoTypeRepository.save(existing);
 
             redirectAttributes.addFlashAttribute("successMessage",
-                    "Gallery album '" + existing.getName() + "' updated successfully!");
+                    "videoGallery album '" + existing.getName() + "' updated successfully!");
 
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to upload cover image: " + e.getMessage());
@@ -188,29 +213,42 @@ public class VideoController {
             redirectAttributes.addFlashAttribute("errorMessage", "An error occurred: " + e.getMessage());
         }
 
-        return "redirect:/seeVideos";
+        return "redirect:/video";
     }
-    @PostMapping("/deleteAlbum")
-    public String remove(@RequestParam("itemId") int deletedone){
-        VideosType deleteGallery=videoTypeRepository.findById(deletedone).orElseThrow();
-        List<Videos> videos=videosRepository.findAllByVideosType_Id(deletedone);
+    @PostMapping("/delete")
+    public String deletevideoGalleryType(@RequestParam("itemId") int videoTypeId,RedirectAttributes redirectAttributes){
 
-        videosRepository.saveAll(videos);
-        videoTypeRepository.delete(deleteGallery);
-        return "redirect:/seeVideos";
+        try {
+            VideosType videoTypeToDelete = videoTypeRepository.findById(videoTypeId)
+                    .orElseThrow(() -> new RuntimeException(" video Gallery album not found with ID: " + videoTypeId));
+
+            // Delete all associated files from disk first
+            if (videoTypeToDelete.getPath() != null && !videoTypeToDelete.getPath().isEmpty()) {
+                fileStorageService.deleteFile(videoTypeToDelete.getPath());
+            }
+            for (Videos video : videoTypeToDelete.getVideos()) {
+                fileStorageService.deleteFile(video.getPath());
+            }
+            List<Videos> videos=videosRepository.findAllByVideosType_Id(videoTypeId);
+            videosRepository.deleteAll(videos);
+            videoTypeRepository.delete(videoTypeToDelete);
+
+            redirectAttributes.addFlashAttribute("successMessage", "videoGallery album '" + videoTypeToDelete.getName() + "' and all its images deleted successfully!");
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete album files: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "An error occurred during album deletion: " + e.getMessage());
+            e.printStackTrace();
+        }
+//        videosRepository.saveAll(videos);
+//        videoTypeRepository.delete(deleteGallery);
+        return "redirect:/video";
     }
-//    @PostMapping("/deleteitemGType")
-//    public String remove(@RequestParam("itemId") int deletedone){
-//        GalleryType deleteGallery=galleryTypeRepository.findById(deletedone).orElseThrow();
-//        List<Gallery> galleries=galleryRepository.findAllByGalleryType_Id(deletedone);
-//
-//        galleryRepository.saveAll(galleries);
-//        galleryTypeRepository.delete(deleteGallery);
-//        return "redirect:/gallery";
-//    }
 
 
-    @GetMapping("/addVideosToAlbum/{typeId}")
+
+    @GetMapping("/videos/add/form/{typeId}")
     public String addGallery(@PathVariable("typeId") int id,Model model){
         System.out.println(id);
         Videos video=new Videos();
@@ -219,14 +257,9 @@ public class VideoController {
         model.addAttribute("videoType",videoType);
         return "add-video-to-album-form";
     }
-    @PostMapping("/addVideosToAlbum/{typeId}")
+    @PostMapping("/videos/add/{typeId}")
     public String saveGallery(@RequestParam("newAlbumVideoFiles") MultipartFile newVideoURL,@PathVariable("typeId") int typeId,Model model ) throws IOException {
-//        if(bindingResult.hasErrors()){
-//            GalleryType galleryType= galleryTypeRepository.findById(typeId).orElseThrow();
-//            model.addAttribute("galleryType",galleryType);
-//            return  "additeminGType";
-//        }
-//    try {
+
         Videos video=new Videos();
         if (newVideoURL != null && !newVideoURL.isEmpty()) {
             // Upload new cover → replace
@@ -234,16 +267,9 @@ public class VideoController {
             video.setPath(newVideoePath);
             video.setName(newVideoURL.getOriginalFilename());
         }
-
-
-
-
         video.setVideosType(videoTypeRepository.findById(typeId).orElseThrow());
-
         videosRepository.save(video);
-
-
-        return "redirect:/viewVideos/" + typeId;
+        return "redirect:/video/viewVideos/" + typeId;
 
 
     }
@@ -252,136 +278,7 @@ public class VideoController {
         Videos deleteVideo=videosRepository.findById(deletedone).orElseThrow();
 
         videosRepository.delete(deleteVideo);
-        return "redirect:/viewVideos/" + typeId;
+        return "redirect:/video/viewVideos/" + typeId;
     }
-//        @PostMapping("/updatevideoType")
-//        public String updatevideoT(@RequestParam("videoId") int id,Model model){
-//          VideosType updatedvideo=videoTypeRepository.findById(id).orElseThrow();
-//          model.addAttribute("updatedvideo",updatedvideo);
-//          return "updateVideoType";
-//        }
-//        @PostMapping("/saveUpdatedVideo")
-//        public String saveUpdatedVideo(@Valid @ModelAttribute("updatedvideo") VideosType updatedvideo,BindingResult bindingResult,@RequestParam("newvideoURL") MultipartFile newvideoURL, @RequestParam("oldvideoURL") String oldvideoURL,Model model) throws IOException {
-//           if(bindingResult.hasErrors()){
-//               return "updateVideoType";
-//           }
-//        try {
-//               if (!newvideoURL.isEmpty()) {
-//                   if (updatedvideo.getPath() != null) {
-//                       String folder = "C:/videos/" + Paths.get(updatedvideo.getPath());
-//                       File oldimgFile = new File(folder);
-//                       if (oldimgFile.exists()) oldimgFile.delete();
-//                   }
-//
-//                   String newimgFolder = "C:/videos/";
-//                   String newImgname = UUID.randomUUID() + "_" + newvideoURL.getOriginalFilename();
-//                   Path newpath = Paths.get(newimgFolder, newImgname);
-//                   Files.write(newpath, newvideoURL.getBytes());
-//                   updatedvideo.setPath("/videos/" + newImgname);
-//               }
-//               else {
-//
-//                   updatedvideo.setPath(oldvideoURL);
-//               }
-//               videoTypeRepository.save(updatedvideo);
-//               return "redirect:/seeVideos";
-//           }
-//           catch (DataIntegrityViolationException e) {
-//               model.addAttribute("error", "the name is must be unique");
-//               return "updateVideoType";
-//           }
-//        }
-//        @PostMapping("/deletevideoType")
-//        public String deleteVideoType(@RequestParam("videoId") int deletedone){
-//          VideosType deletedvideo=videoTypeRepository.findById(deletedone).orElseThrow();
-//          videoTypeRepository.delete(deletedvideo);
-//          return "redirect:/seeVideos";
-//        }
-//    @GetMapping("/videoGalaryType/{id}")
-//    public String galleryType(@PathVariable("id") int typeid, Model model, Principal principal){
-//        System.out.println(typeid);
-//        List<Videos> videos=videosRepository.findAllByTypeId(typeid);
-//        model.addAttribute("videos",videos);
-//        model.addAttribute("TypeId",typeid);
-//        if(principal !=null){
-//            model.addAttribute("username",principal.getName());
-//        }
-//        return "videoType_Details";
-//
-//    }
-//
-//    @GetMapping("/addvideoinvideotype/{typeId}")
-//    public String additeminGType(@PathVariable("typeId") int id,Model model){
-//
-//        Videos video=new Videos();
-//        VideosType videosType= videoTypeRepository.findById(id).orElseThrow();
-//        model.addAttribute("video",video);
-//        model.addAttribute("videoType",videosType);
-//        return "addvideoinVideoType";
-//    }
-//    @PostMapping("/savevideoinVideoType")
-//    public String saveitemType(@Valid @ModelAttribute("video") Videos video, @RequestParam("typeId") int typeId, @Valid @RequestParam("videoFile")MultipartFile videoURL, BindingResult bindingResult ) throws IOException {
-//        if(bindingResult.hasErrors()){
-//            return  "addvideoinVideoType";
-//        }
-//        String folder="C:/videos/";
-//        String filename= UUID.randomUUID() + "_" + videoURL.getOriginalFilename();
-//        Path filepath= Paths.get(folder,filename);
-//        Files.write(filepath,videoURL.getBytes());
-//
-//        Videos videoitem=new Videos();
-//        videoitem.setPath("/videos/"+filename);
-//        videoitem.setTypeId(videoTypeRepository.findById(typeId).orElseThrow().getId());
-//
-//
-//
-//        videosRepository.save(videoitem);
-//        System.out.println(typeId);
-//
-//        return "redirect:/videoGalaryType/" + typeId;
-//
-//    }
-//    @PostMapping("/updateVideo")
-//    public String updateiteminGType(@RequestParam("itemId") int id,Model model){
-//        Videos video=videosRepository.findById(id).orElseThrow();
-//        model.addAttribute("video",video);
-//        return "updateVideo";
-//    }
-//    @PostMapping("/saveVideoAfterUpdate")
-//    public String saveVideoafterUpdate(@Valid @ModelAttribute("video") Videos video, @RequestParam("newvideoURL") MultipartFile newURL, @RequestParam("oldvideoURl") String oldURL ) throws IOException {
-//        //       if(bindingResult.hasErrors()){
-//        //           return "updateForm";
-//        //       }
-//
-//        if (!newURL.isEmpty()) {
-//            if (video.getPath() != null) {
-//                String folder = "C:/videos/" + Paths.get(video.getPath());
-//                File oldvideoFile = new File(folder);
-//                if (oldvideoFile.exists()) oldvideoFile.delete();
-//            }
-//
-//            String newvideoFolder = "C:/videos/";
-//            String newvideoname = UUID.randomUUID() + "_" + newURL.getOriginalFilename();
-//            Path newpath = Paths.get(newvideoFolder, newvideoname);
-//            Files.write(newpath, newURL.getBytes());
-//            video.setPath("/videos/" + newvideoname);
-//        }
-//        else {
-//            System.out.println(oldURL);
-//            video.setPath(oldURL);
-//        }
-//        int typeId=video.getTypeId();
-//        videosRepository.save(video);
-//        return  "redirect:/videoGalaryType/" + typeId;
-//    }
-//    @PostMapping("/deleteVideo")
-//    public String deleteiteminGType(@RequestParam("itemId") int deletedone){
-//        Videos deletevideo=videosRepository.findById(deletedone).orElseThrow();
-//        int typeId =deletevideo.getTypeId();
-//        videosRepository.delete(deletevideo);
-//        return "redirect:/videoGalaryType/" + typeId;
-//    }
-//
-
 
 }

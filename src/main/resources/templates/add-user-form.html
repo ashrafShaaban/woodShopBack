@@ -44,8 +44,8 @@
                     </div>
 
 
-                    <h1 class="text-center headform" th:text="#{addedituser}">Add/Update User</h1>
-                    <form th:action="${isEdit} ? @{/users/saveuserUpdate} :@{/users/saveUser}" th:object="${newUser}" method="post" enctype="multipart/form-data">
+                    <h1 class="text-center headform" th:text="#{addedituser}">Add User</h1>
+                    <form th:action="@{/users}" th:object="${newUser}" method="post" enctype="multipart/form-data">
                         <input type="hidden" th:field="*{id}">
 
                         <div class="mb-3">
@@ -65,9 +65,9 @@
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary action-button">
-                                <i class="fas fa-plus-circle me-2"></i><span th:text="#{createupdateuser}">Create/Update User</span>
+                                <i class="fas fa-plus-circle me-2"></i><span th:text="#{createupdateuser}">Create User</span>
                             </button>
-                            <a th:href="@{/seeUsers}" class="btn btn-secondary action-button">
+                            <a th:href="@{/users}" class="btn btn-secondary action-button">
                                 <i class="fas fa-arrow-left me-2"></i><span  th:text="#{back}">Cancel</span>
                             </a>
                         </div>
@@ -78,27 +78,6 @@
     </div>
 </div>
 
-
-<!--<form class="itemform" method="post" th:object="${newUser}" th:action="${isEdit} ? @{/saveuserUpdate} :@{/saveUser}" >-->
-<!--    <div th:if="${error}" class="error-message" th:text="${error}"></div>-->
-<!--    <input type="hidden" th:field="*{id}"/>-->
-
-<!--    <input type="text" th:field="*{username}"   placeholder="enter username"/>-->
-<!--    <span th:if="${#fields.hasErrors('username')}"-->
-<!--          th:errors="*{username}"-->
-<!--          class="notvalid"/>-->
-
-<!--    <input type="password" th:field="*{password}" th:if="${!isEdit}"  placeholder="enter password">-->
-<!--    <span th:if="${#fields.hasErrors('password')}"-->
-<!--          th:errors="*{password}"-->
-<!--          class="notvalid"/>-->
-<!--    <input type="password" th:field="*{password}" th:if="${isEdit}" placeholder="Leave empty to keep old password"/>-->
-<!--    <input type="text" th:field="*{role}" placeholder="enter the role"/>-->
-<!--    <input type="checkbox" th:field="*{active}" /> Active-->
-<!--    <input class="btn btn-info w-25" type="submit" value="add user">-->
-
-<!--</form>-->
-<!--<a th:href="@{/seeUsers}" class="backto" >Go back to Users</a>-->
 <script th:src="@{/js/admin.js}" ></script>
 </body>
 </html>
