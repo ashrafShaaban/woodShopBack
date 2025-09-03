@@ -50,7 +50,7 @@ public class Category {
 
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
-            name = "category_dimensions",
+            name = "categories_dimensions",
             joinColumns = @JoinColumn(name = "category_id"),
             inverseJoinColumns =@JoinColumn(name = "dimensions_id")
     )
